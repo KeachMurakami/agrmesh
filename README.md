@@ -5,7 +5,7 @@
 
 このパッケージは農研機構が運営するメッシュ農業気象データシステムをRから利用するためのインターフェイスです。
 システム全般に関する情報は[こちら](https://amu.rd.naro.go.jp/wiki_open/doku.php)を参照してください。
-利用環境Rstudioでの利用を想定しています。 このパッケージはIntel Mac、M2
+Rstudioでの利用を想定しています。 このパッケージはIntel Mac、M2
 Mac、Windows 10、Linux (Ubuntu 22.04.1
 LTS)で動作することが確認されていますが、とくにAppleCPUのMacではいくつかの依存性パッケージのインストールに苦戦する可能性があります。
 
@@ -49,7 +49,7 @@ library(jpndistrict)
 #> Image) published by Geospatial Information Authority of Japan (Approval
 #> No.603FY2017 information usage <https://www.gsi.go.jp>)
 library(agrmesh)
-#> ℹ WELCOME to R-AMGSDS interface (ver.0.0.0.9021)
+#> ℹ WELCOME to R-AMGSDS interface (ver.0.0.1.0)
 #> ℹ 農研機構は、農業分野や他の分野における研究・開発・教育・試用を目的とする者に、審査に基づきメッシュ農業気象データ（以下、「このデータ」と呼ぶ。）の利用を許可します。
 #> ℹ 特に許可されない限り、このデータを他に転載したり第三者に提供したりすることはできません。
 #> ℹ このデータを利用して作成した情報を販売することはできません。
