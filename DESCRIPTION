@@ -1,0 +1,42 @@
+Package: agrmesh
+Type: Package
+Title: R Interface for AMGSDS
+Version: 0.0.1.0000
+Authors@R: c(
+    person("Keach", "Murakami", role = c("aut", "cre"), email = "keach.murakami@gmail.com", comment = c(ORCID = "0000-0001-8150-9535")),
+    person("Yuichi", "Nagasaki", role = c("ctb"))
+    )
+Description: R interface to access the Agro-Meteorological Grid Square Data system operated by NARO.
+    See <https://amu.rd.naro.go.jp/> for more details of the system.
+License: GPL (>= 3) + file LICENSE
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 7.2.3
+Roxygen: list(markdown = TRUE)
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3
+Depends: 
+    R (>= 4.1)
+Imports: 
+    abind (>= 1.4.5),
+    curl (>= 4.3.3),
+    dplyr (>= 1.0.10),
+    ggplot2 (>= 3.4.0),
+    jpndistrict (>= 0.3.9.9000),
+    leaflet (>= 2.1.1),
+    leaflet.extras (>= 1.0.0),
+    lubridate (>= 1.9.0),
+    magrittr (>= 2.0.3),
+    mapedit (>= 0.6.0),
+    mapview (>= 2.11.0),
+    purrr (>= 1.0.0),
+    readr (>= 2.1.3),
+    rlang (>= 1.0.6),
+    sf (>= 1.0.9),
+    stringr (>= 1.5.0),
+    tibble (>= 3.1.8),
+    tidync (>= 0.3.0),
+    tidyr (>= 1.2.1),
+    tidyselect (>= 1.2.0),
+    usethis (>= 2.1.6)
