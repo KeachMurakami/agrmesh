@@ -236,7 +236,7 @@ str(attributes(area_daily_rain))
 ```{r plot_area_base}
 image(area_daily_rain[,,1])
 
-# install.packages("field") # if not installed
+# install.packages("fields") # if not installed
 library(fields)
 image.plot(area_daily_rain[,,1])
 ```

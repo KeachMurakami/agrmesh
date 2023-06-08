@@ -78,8 +78,8 @@ print(point_daily_temp)
 #> # A tibble: 2 × 5
 #>   time         lat   lon site_id TMP_mea
 #>   <date>     <dbl> <dbl> <chr>     <dbl>
-#> 1 2023-05-23  43.0  141. 1          10.6
-#> 2 2023-05-23  26.2  128. 2          23.8
+#> 1 2023-06-08  43.0  141. 1          17.2
+#> 2 2023-06-08  26.2  128. 2          26.7
 ```
 
 出力された`point_daily_temp`は、日付 (`time`)、緯度・経度
@@ -278,7 +278,7 @@ image(area_daily_rain[,,1])
 
 ``` r
 
-# install.packages("field") # if not installed
+# install.packages("fields") # if not installed
 library(fields)
 image.plot(area_daily_rain[,,1])
 ```
