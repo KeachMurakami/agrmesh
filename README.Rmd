@@ -126,6 +126,8 @@ fetch_amgsds(
   RCP = "RCP8.5",     # 将来気候データ作成に用いた排出シナリオ名
                       # source == "scenario"の場合にのみ有効
   is_clim = FALSE,    # TRUEならば平年値を表示する
+  server = "https://amd.rd.naro.go.jp/",
+                      # OPeNDAPサーバーのURL
   .silent = TRUE      # FALSEならばダウンロードファイルサイズ等の情報を表示
 )
 ```
@@ -141,8 +143,8 @@ fetch_amgsds(
 library(lubridate)
 
 time_range <-
-  ymd_hm(c("2023-01-30 13:30", "2023-01-31 22:30"), tz = "Asia/Tokyo") # tzを Asiz/TokyoまたはJapanに指定
-  # ymd(c("2023-01-30", "2023-01-31"), tz = "Asia/Tokyo") なら2日間 = 48時間のデータを取得
+  ymd_hm(c("2023-12-30 13:30", "2024-01-02 22:30"), tz = "Asia/Tokyo") # tzを Asiz/TokyoまたはJapanに指定
+  # ymd(c("2023-12-30", "2024-01-02"), tz = "Asia/Tokyo") なら4日間 = 96時間のデータを取得
 
 sites <-
   tibble(
@@ -287,7 +289,10 @@ PCの性能と描画領域の大きさによって、Rstudioがクラッシュ�
 そういう場合には、`thin`の値を小さくすることを検討してください。
 `thin`を指定しなかった場合には、`thin = 0.01`として領域内のメッシュのうち1 %が表示されるように調整しています。
 
-```{r plot_area_leaflet}
+```{r plot_area_leaflet, eval = FALSE}
+
+# README.mdに掲載できないため、このコードは実行されていません
+
 area_daily_rain_long %>%
   filter(between(lat, 42.7, 43.5), between(lon, 140.5, 141.5)) %>%
   plot2d_leaflet(
@@ -419,6 +424,14 @@ Rでは、`tidync`、`ncdf4`、`raster`、`metR1`、`RNetCDF`、`easyNCDF`など
 
 Copyright 2023 Keach Murakami
 
+
+## 5 変更履歴
+
+- 2023-05-23 (ver. 0.0.1.0000)
+    - パッケージを公開しました。
+- 2024-01-23 (ver. 0.0.1.0001)
+    - 複数年に跨るデータの取得が可能になりました。
+    - データ取得の接続先を任意のOPeNDAPサーバに変更できるようにしました。
 
 <!-- ## 4. 実践的な使用例 -->
 

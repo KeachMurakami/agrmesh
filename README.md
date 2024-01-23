@@ -44,12 +44,22 @@ Rstudioを再起動してパッケージを読み込み、以下のようなメ�
 
 ``` r
 library(tidyverse)
+#> ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+#> ✔ dplyr     1.1.4     ✔ readr     2.1.5
+#> ✔ forcats   1.0.0     ✔ stringr   1.5.1
+#> ✔ ggplot2   3.4.4     ✔ tibble    3.2.1
+#> ✔ lubridate 1.9.3     ✔ tidyr     1.3.0
+#> ✔ purrr     1.0.2     
+#> ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+#> ✖ dplyr::filter() masks stats::filter()
+#> ✖ dplyr::lag()    masks stats::lag()
+#> ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
 library(jpndistrict)
 #> This package provide map data is based on the Digital Map 25000 (Map
 #> Image) published by Geospatial Information Authority of Japan (Approval
 #> No.603FY2017 information usage <https://www.gsi.go.jp>)
 library(agrmesh)
-#> ℹ WELCOME to R-AMGSDS interface (ver.0.0.1.0)
+#> ℹ WELCOME to R-AMGSDS interface (ver.0.0.1.1) 
 #> ℹ 農研機構は、農業分野や他の分野における研究・開発・教育・試用を目的とする者に、審査に基づきメッシュ農業気象データ（以下、「このデータ」と呼ぶ。）の利用を許可します。
 #> ℹ 特に許可されない限り、このデータを他に転載したり第三者に提供したりすることはできません。
 #> ℹ このデータを利用して作成した情報を販売することはできません。
@@ -78,8 +88,8 @@ print(point_daily_temp)
 #> # A tibble: 2 × 5
 #>   time         lat   lon site_id TMP_mea
 #>   <date>     <dbl> <dbl> <chr>     <dbl>
-#> 1 2023-06-08  43.0  141. 1          17.2
-#> 2 2023-06-08  26.2  128. 2          26.7
+#> 1 2024-01-23  43.0  141. 1         0.163
+#> 2 2024-01-23  26.2  128. 2        12.4
 ```
 
 出力された`point_daily_temp`は、日付 (`time`)、緯度・経度
@@ -127,6 +137,8 @@ fetch_amgsds(
   RCP = "RCP8.5",     # 将来気候データ作成に用いた排出シナリオ名
                       # source == "scenario"の場合にのみ有効
   is_clim = FALSE,    # TRUEならば平年値を表示する
+  server = "https://amd.rd.naro.go.jp/",
+                      # OPeNDAPサーバーのURL
   .silent = TRUE      # FALSEならばダウンロードファイルサイズ等の情報を表示
 )
 ```
@@ -140,8 +152,8 @@ fetch_amgsds(
 library(lubridate)
 
 time_range <-
-  ymd_hm(c("2023-01-30 13:30", "2023-01-31 22:30"), tz = "Asia/Tokyo") # tzを Asiz/TokyoまたはJapanに指定
-  # ymd(c("2023-01-30", "2023-01-31"), tz = "Asia/Tokyo") なら2日間 = 48時間のデータを取得
+  ymd_hm(c("2023-12-30 13:30", "2024-01-02 22:30"), tz = "Asia/Tokyo") # tzを Asiz/TokyoまたはJapanに指定
+  # ymd(c("2023-12-30", "2024-01-02"), tz = "Asia/Tokyo") なら4日間 = 96時間のデータを取得
 
 sites <-
   tibble(
@@ -159,20 +171,20 @@ point_hourly <-
   )
 
 print(point_hourly)
-#> # A tibble: 102 × 6
+#> # A tibble: 243 × 6
 #>    time                  lat   lon site_id   TMP    RH
 #>    <dttm>              <dbl> <dbl> <chr>   <dbl> <dbl>
-#>  1 2023-01-30 13:00:00  35.7  140. 1         9.5  49.1
-#>  2 2023-01-30 14:00:00  35.7  140. 1        10    51.3
-#>  3 2023-01-30 15:00:00  35.7  140. 1        10.3  43.4
-#>  4 2023-01-30 16:00:00  35.7  140. 1         9.9  36.5
-#>  5 2023-01-30 17:00:00  35.7  140. 1         9.2  38.1
-#>  6 2023-01-30 18:00:00  35.7  140. 1         6.3  46  
-#>  7 2023-01-30 19:00:00  35.7  140. 1         5.7  40.6
-#>  8 2023-01-30 20:00:00  35.7  140. 1         4.8  41.7
-#>  9 2023-01-30 21:00:00  35.7  140. 1         4.1  41.1
-#> 10 2023-01-30 22:00:00  35.7  140. 1         3.7  42.7
-#> # ℹ 92 more rows
+#>  1 2023-12-30 14:00:00  35.7  140. 1        14.6  41.3
+#>  2 2023-12-30 15:00:00  35.7  140. 1        13.7  53.7
+#>  3 2023-12-30 16:00:00  35.7  140. 1        12.8  58.5
+#>  4 2023-12-30 17:00:00  35.7  140. 1        10.1  65.4
+#>  5 2023-12-30 18:00:00  35.7  140. 1         9.7  64  
+#>  6 2023-12-30 19:00:00  35.7  140. 1         9.7  65.5
+#>  7 2023-12-30 20:00:00  35.7  140. 1         8.9  73.6
+#>  8 2023-12-30 21:00:00  35.7  140. 1         8.7  80.1
+#>  9 2023-12-30 22:00:00  35.7  140. 1         9    78.6
+#> 10 2023-12-30 23:00:00  35.7  140. 1         9.2  81.3
+#> # ℹ 233 more rows
 ```
 
 現在のところ、時別気象要素として、気温 (`TMP`) と相対湿度 (`RH`)
@@ -280,6 +292,20 @@ image(area_daily_rain[,,1])
 
 # install.packages("fields") # if not installed
 library(fields)
+#> Loading required package: spam
+#> Spam version 2.10-0 (2023-10-23) is loaded.
+#> Type 'help( Spam)' or 'demo( spam)' for a short introduction 
+#> and overview of this package.
+#> Help for individual functions is also obtained by adding the
+#> suffix '.spam' to the function name, e.g. 'help( chol.spam)'.
+#> 
+#> Attaching package: 'spam'
+#> The following objects are masked from 'package:base':
+#> 
+#>     backsolve, forwardsolve
+#> Loading required package: viridisLite
+#> 
+#> Try help(fields) to get started.
 image.plot(area_daily_rain[,,1])
 ```
 
@@ -355,6 +381,9 @@ PCの性能と描画領域の大きさによって、Rstudioがクラッシュ�
 %が表示されるように調整しています。
 
 ``` r
+
+# README.mdに掲載できないため、このコードは実行されていません
+
 area_daily_rain_long %>%
   filter(between(lat, 42.7, 43.5), between(lon, 140.5, 141.5)) %>%
   plot2d_leaflet(
@@ -364,11 +393,7 @@ area_daily_rain_long %>%
                       # 背景となる地図の種類
     thin = 1          # 描画割合 (0-1)
   )
-#> Warning:
-#> 2個の日付・時刻のデータが存在します。`time_index`で指定された1-2番目のデータのみが表示されています。
 ```
-
-<img src="man/figures/README-plot_area_leaflet-1.png" width="100%" />
 
 `output = "array"`として複数要素を取得した場合、返り値は要素ごとのリスト形式になっています。
 `unfold_array`関数は単一要素のときと同様に作用しますが、`plot2d_***`系の関数を使った場合には警告が表示され、`element_index`で指定した番号の要素に関するデータのみが図示されます。
@@ -453,7 +478,8 @@ MB 程度です。
 args(load_amgsds)
 #> function (times = Sys.time(), lats, lons, elements, mode = "point", 
 #>     source = "daily", output = "tibble", model = "MIROC5", RCP = "RCP8.5", 
-#>     is_clim = FALSE, .silent = TRUE, localdir, autodownload = FALSE) 
+#>     is_clim = FALSE, server = "amd.rd.naro.go.jp", .silent = TRUE, 
+#>     localdir, autodownload = FALSE) 
 #> NULL
 ```
 
@@ -530,6 +556,14 @@ License](https://www.gnu.org/licenses/gpl-3.0.html) version 3 or later
 また、jpndistrictパッケージが提供する行政区画データを利用する場合は、適切に出典を表記するようにしてください。
 
 Copyright 2023 Keach Murakami
+
+## 5 変更履歴
+
+- 2023-05-23 (ver. 0.0.1.0000)
+  - パッケージを公開しました。
+- 2024-01-23 (ver. 0.0.1.0001)
+  - 複数年に跨るデータの取得が可能になりました。
+  - データ取得の接続先を任意のOPeNDAPサーバに変更できるようにしました。
 
 <!-- ## 4. 実践的な使用例 -->
 <!-- いくつかの実践的なサンプルを示します。 -->
