@@ -15,6 +15,7 @@ fetch_amgsds(
   model = "MIROC5",
   RCP = "RCP8.5",
   is_clim = FALSE,
+  server = "amd.rd.naro.go.jp",
   .silent = TRUE
 )
 }
@@ -38,6 +39,8 @@ fetch_amgsds(
 \item{RCP}{Representative Concentration Pathways for scenario data}
 
 \item{is_clim}{logical. return climatological normals if \code{TRUE}}
+
+\item{server}{URL for OPeNDAP server}
 
 \item{.silent}{logical. suppress download message if \code{TRUE}}
 }

@@ -1,7 +1,7 @@
 Package: agrmesh
 Type: Package
 Title: R Interface for AMGSDS
-Version: 0.0.1.0000
+Version: 0.0.1.0001
 Authors@R: c(
     person("Keach", "Murakami", role = c("aut", "cre"), email = "keach.murakami@gmail.com", comment = c(ORCID = "0000-0001-8150-9535")),
     person("Yuichi", "Nagasaki", role = c("ctb"))
@@ -11,7 +11,7 @@ Description: R interface to access the Agro-Meteorological Grid Square Data syst
 License: GPL (>= 3) + file LICENSE
 Encoding: UTF-8
 LazyData: true
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.0
 Roxygen: list(markdown = TRUE)
 Suggests: 
     testthat (>= 3.0.0)

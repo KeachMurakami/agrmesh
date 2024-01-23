@@ -7,6 +7,7 @@
 amgsds_config(
   userid = Sys.getenv("amgsds_id"),
   password = Sys.getenv("amgsds_pw"),
+  server = "amd.rd.naro.go.jp",
   .force = FALSE
 )
 }
@@ -14,6 +15,8 @@ amgsds_config(
 \item{userid}{your user id issued by the development group}
 
 \item{password}{your password issued by the development group}
+
+\item{server}{URL for OPeNDAP server}
 
 \item{.force}{logical. pass verification for offline .onLoad}
 }
