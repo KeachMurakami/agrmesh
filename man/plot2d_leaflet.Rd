@@ -10,8 +10,8 @@ plot2d_leaflet(
   time_index = 1,
   alpha = 0.7,
   pallete = "viridis",
-  basemap = leaflet:::providers$Wikimedia,
-  thin = 0.01
+  basemap = leaflet:::providers$Esri.WorldImagery,
+  thin = 1
 )
 }
 \arguments{

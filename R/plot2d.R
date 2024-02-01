@@ -113,7 +113,7 @@ plot2d_shape <-
 #'
 #' @export
 plot2d_leaflet <-
-  function(amgsds_tibble, element_index = 1, time_index = 1, alpha = .7, pallete = "viridis", basemap = leaflet:::providers$Wikimedia, thin = 0.01){
+  function(amgsds_tibble, element_index = 1, time_index = 1, alpha = .7, pallete = "viridis", basemap = leaflet:::providers$Esri.WorldImagery, thin = 1){
 
     if(class(amgsds_tibble)[1] %in% c("array", "list")){
       amgsds_tibble <- amgsds_tibble %>% unfold_array()
