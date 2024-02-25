@@ -48,8 +48,12 @@ preview_dataset <-
       availability_table <-
         tibble::tribble(
           ~ element, ~ unit,    ~ from,                 ~ to,                                                         ~ clim_from,       ~ description,
-          "TMP",     "\u00b0C", ymd_h("1990-01-01 01", tz = "Asia/Tokyo"), ymd_h(paste(lubridate::today(tz = "Asia/Tokyo") + lubridate::days(10), "00")), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u6c17\u6e29",
-          "RH",      "%",       ymd_h("2019-01-01 01", tz = "Asia/Tokyo"), ymd_h(paste(lubridate::today(tz = "Asia/Tokyo") + lubridate::days(10), "00")), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u76f8\u5bfe\u6e7f\u5ea6")
+          "TMP",     "\u00b0C", ymd_h("1991-01-01 01", tz = "Asia/Tokyo"), ymd_h(paste(lubridate::today(tz = "Asia/Tokyo") + lubridate::days(10), "00")), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u6c17\u6e29",
+          "RH",      "%",       ymd_h("2008-01-01 01", tz = "Asia/Tokyo"), ymd_h(paste(lubridate::today(tz = "Asia/Tokyo") + lubridate::days(10), "00")), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u76f8\u5bfe\u6e7f\u5ea6",
+          "DLR",      "MJ m-2",       ymd_h("2008-01-01 01", tz = "Asia/Tokyo"), ymd_h(paste(lubridate::today(tz = "Asia/Tokyo") + lubridate::days(10), "00")), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u4e0b\u5411\u304d\u9577\u6ce2\u653e\u5c04\u91cf",
+          "APCPRA",      "mm",       ymd_h("2022-01-01 01", tz = "Asia/Tokyo"), ymd_h(paste(lubridate::today(tz = "Asia/Tokyo") + lubridate::days(10), "00")), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u964d\u6c34\u91cf",
+          "PREC",      "mm",       ymd_h("2022-01-01 01", tz = "Asia/Tokyo"), ymd_h(paste(lubridate::today(tz = "Asia/Tokyo") + lubridate::days(10), "00")), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u964d\u6c34\u91cf"
+          )
     } else if(source == "geo"){
       availability_table <-
         tibble::tribble(

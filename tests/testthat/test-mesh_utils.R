@@ -16,8 +16,8 @@ test_that("display dataset informations", {
 
   # 15 elements in daily
   expect_equal(NROW(preview_dataset("daily", internal_use = TRUE)), 15)
-  # 2 elements in hourly (TMP, RH)
-  expect_equal(NROW(preview_dataset("hourly", internal_use = TRUE)), 2)
+  # 5 elements in hourly (TMP, RH, APCPRA, PREC, DLR)
+  expect_equal(NROW(preview_dataset("hourly", internal_use = TRUE)), 5)
   # 76 elements in geo
   expect_equal(NROW(preview_dataset("geo", internal_use = TRUE)), 76)
   # 7 elements in scenario

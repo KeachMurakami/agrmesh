@@ -48,7 +48,7 @@ library(tidyverse)
 #> ✔ dplyr     1.1.4     ✔ readr     2.1.5
 #> ✔ forcats   1.0.0     ✔ stringr   1.5.1
 #> ✔ ggplot2   3.4.4     ✔ tibble    3.2.1
-#> ✔ lubridate 1.9.3     ✔ tidyr     1.3.0
+#> ✔ lubridate 1.9.3     ✔ tidyr     1.3.1
 #> ✔ purrr     1.0.2     
 #> ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 #> ✖ dplyr::filter() masks stats::filter()
@@ -59,7 +59,7 @@ library(jpndistrict)
 #> Image) published by Geospatial Information Authority of Japan (Approval
 #> No.603FY2017 information usage <https://www.gsi.go.jp>)
 library(agrmesh)
-#> ℹ WELCOME to R-AMGSDS interface (ver.0.0.1.1) 
+#> ℹ WELCOME to R-AMGSDS interface (ver.0.0.1.2) 
 #> ℹ 農研機構は、農業分野や他の分野における研究・開発・教育・試用を目的とする者に、審査に基づきメッシュ農業気象データ（以下、「このデータ」と呼ぶ。）の利用を許可します。
 #> ℹ 特に許可されない限り、このデータを他に転載したり第三者に提供したりすることはできません。
 #> ℹ このデータを利用して作成した情報を販売することはできません。
@@ -88,8 +88,8 @@ print(point_daily_temp)
 #> # A tibble: 2 × 5
 #>   time         lat   lon site_id TMP_mea
 #>   <date>     <dbl> <dbl> <chr>     <dbl>
-#> 1 2024-01-23  43.0  141. 1         0.163
-#> 2 2024-01-23  26.2  128. 2        12.4
+#> 1 2024-02-25  43.0  141. 1         -4.69
+#> 2 2024-02-25  26.2  128. 2         16.5
 ```
 
 出力された`point_daily_temp`は、日付 (`time`)、緯度・経度
@@ -564,6 +564,10 @@ Copyright 2023 Keach Murakami
 - 2024-01-23 (ver. 0.0.1.0001)
   - 複数年に跨るデータの取得が可能になりました。
   - データ取得の接続先を任意のOPeNDAPサーバに変更できるようにしました。
+- 2024-01-23 (ver. 0.0.1.0002)
+  - {leaflet}の更新に対応し、`plot2d_leaflet`時の背景地図を変更しました。
+- 2024-02-25 (ver. 0.0.1.0003)
+  - 取得可能な時別データのリストを更新しました。
 
 <!-- ## 4. 実践的な使用例 -->
 <!-- いくつかの実践的なサンプルを示します。 -->
