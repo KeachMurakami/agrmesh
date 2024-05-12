@@ -420,9 +420,10 @@ Rでは、`tidync`、`ncdf4`、`raster`、`metR1`、`RNetCDF`、`easyNCDF`など
 
 パッケージの利用に関して不明な点や機能の追加のリクエストがある場合には、slackの技術相談窓口にてお問い合わせください。
 本パッケージは[GNU General Public License](https://www.gnu.org/licenses/gpl-3.0.html) version 3 or later を継承します。
-また、jpndistrictパッケージが提供する行政区画データを利用する場合は、適切に出典を表記するようにしてください。
+jpndistrictパッケージが提供する行政区画データを利用した図を公表する場合、適切に出典を表記するようにしてください。
+本パッケージを利用した成果物を公表する場合、以下のように引用してください。
 
-Copyright 2023 Keach Murakami
+> Keach Murakami, Yuichi Nagasaki, 2023: agrmesh: R interface for the agro-meteorological grid square data.
 
 
 ## 5 変更履歴

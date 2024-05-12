@@ -176,9 +176,9 @@ replace_stop_words <-
 #' @param .silent suppress download messages if `TRUE`
 #' @export
 download_netcdf <-
-  function(amgsds_path, outdir, server = "amd.rd.naro.go.jp", .silent = TRUE){
+  function(amgsds_path, outdir, server, .silent = TRUE){
 
-    remote <- stringr::str_glue('https://{Sys.getenv("amgsds_id")}:{Sys.getenv("amgsds_pw")}@{server}/opendap/')
+    remote <- stringr::str_glue('https://{Sys.getenv("amgsds_id")}:{Sys.getenv("amgsds_pw")}@{server}/')
 
     nonempty_mesh <- stringr::str_c(paste0("p", nonempty_meshes), collapse = "|")
     available_path <- stringr::str_subset(amgsds_path, nonempty_mesh)
@@ -413,7 +413,7 @@ fetch_amgsds <-
            source = "daily",
            output = "tibble",
            model = "MIROC5", RCP = "RCP8.5",
-           is_clim = FALSE, server = "amd.rd.naro.go.jp", .silent = TRUE){
+           is_clim = FALSE, server = "amd.rd.naro.go.jp/opendap", .silent = TRUE){
 
     yyyy <- unique(lubridate::year(times))
 

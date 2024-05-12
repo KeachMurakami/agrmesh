@@ -8,7 +8,7 @@
 #' @param server URL for OPeNDAP server
 #' @param .force logical. pass verification for offline .onLoad
 amgsds_config <-
-  function(userid = Sys.getenv("amgsds_id"), password = Sys.getenv("amgsds_pw"), server = "amd.rd.naro.go.jp", .force = FALSE){
+  function(userid = Sys.getenv("amgsds_id"), password = Sys.getenv("amgsds_pw"), server = "amd.rd.naro.go.jp/opendap", .force = FALSE){
 
     is_network_available <- TRUE
 
@@ -35,7 +35,7 @@ amgsds_config <-
     if(is_network_available){
       # verify id/pw
       tryCatch({
-        connect <- readr::read_lines(stringr::str_glue("https://{userid}:{password}@{server}/opendap/AMD/"))
+        connect <- readr::read_lines(stringr::str_glue("https://{userid}:{password}@{server}/AMD/"))
         usethis::ui_done("USERID and PASSWORD -> verified\n")
       },
       error = function(e){

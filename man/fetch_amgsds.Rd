@@ -15,7 +15,7 @@ fetch_amgsds(
   model = "MIROC5",
   RCP = "RCP8.5",
   is_clim = FALSE,
-  server = "amd.rd.naro.go.jp",
+  server = "amd.rd.naro.go.jp/opendap",
   .silent = TRUE
 )
 }
