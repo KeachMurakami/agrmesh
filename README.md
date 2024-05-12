@@ -59,7 +59,7 @@ library(jpndistrict)
 #> Image) published by Geospatial Information Authority of Japan (Approval
 #> No.603FY2017 information usage <https://www.gsi.go.jp>)
 library(agrmesh)
-#> ℹ WELCOME to R-AMGSDS interface (ver.0.0.1.2) 
+#> ℹ WELCOME to R-AMGSDS interface (ver.0.0.1.3) 
 #> ℹ 農研機構は、農業分野や他の分野における研究・開発・教育・試用を目的とする者に、審査に基づきメッシュ農業気象データ（以下、「このデータ」と呼ぶ。）の利用を許可します。
 #> ℹ 特に許可されない限り、このデータを他に転載したり第三者に提供したりすることはできません。
 #> ℹ このデータを利用して作成した情報を販売することはできません。
@@ -88,8 +88,8 @@ print(point_daily_temp)
 #> # A tibble: 2 × 5
 #>   time         lat   lon site_id TMP_mea
 #>   <date>     <dbl> <dbl> <chr>     <dbl>
-#> 1 2024-02-25  43.0  141. 1         -4.69
-#> 2 2024-02-25  26.2  128. 2         16.5
+#> 1 2024-05-13  43.0  141. 1          13.3
+#> 2 2024-05-13  26.2  128. 2          22.7
 ```
 
 出力された`point_daily_temp`は、日付 (`time`)、緯度・経度
@@ -553,9 +553,11 @@ Rでは、`tidync`、`ncdf4`、`raster`、`metR1`、`RNetCDF`、`easyNCDF`など
 本パッケージは[GNU General Public
 License](https://www.gnu.org/licenses/gpl-3.0.html) version 3 or later
 を継承します。
-また、jpndistrictパッケージが提供する行政区画データを利用する場合は、適切に出典を表記するようにしてください。
+jpndistrictパッケージが提供する行政区画データを利用した図を公表する場合、適切に出典を表記するようにしてください。
+本パッケージを利用した成果物を公表する場合、以下のように引用してください。
 
-Copyright 2023 Keach Murakami
+> Keach Murakami, Yuichi Nagasaki, 2023: agrmesh: R interface for the
+> agro-meteorological grid square data.
 
 ## 5 変更履歴
 
