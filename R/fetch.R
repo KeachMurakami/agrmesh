@@ -516,7 +516,7 @@ load_amgsds <-
            source = "daily",
            output = "tibble",
            model = "MIROC5", RCP = "RCP8.5",
-           is_clim = FALSE, server = "amd.rd.naro.go.jp", .silent = TRUE,
+           is_clim = FALSE, server = "amd.rd.naro.go.jp/opendap", .silent = TRUE,
            localdir, autodownload = FALSE){
     if(length(elements) == 1){
       amgsds_path <-

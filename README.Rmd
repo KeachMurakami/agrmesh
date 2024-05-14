@@ -126,7 +126,7 @@ fetch_amgsds(
   RCP = "RCP8.5",     # 将来気候データ作成に用いた排出シナリオ名
                       # source == "scenario"の場合にのみ有効
   is_clim = FALSE,    # TRUEならば平年値を表示する
-  server = "https://amd.rd.naro.go.jp/",
+  server = "amd.rd.naro.go.jp/opendap",
                       # OPeNDAPサーバーのURL
   .silent = TRUE      # FALSEならばダウンロードファイルサイズ等の情報を表示
 )
@@ -437,6 +437,8 @@ jpndistrictパッケージが提供する行政区画データを利用した図
     - {leaflet}の更新に対応し、`plot2d_leaflet`時の背景地図を変更しました。
 - 2024-02-25 (ver. 0.0.1.0003)
     - 取得可能な時別データのリストを更新しました。
+- 2024-05-14 (ver. 0.0.1.0004)
+    - 試験開発要素をOpendapサーバ (https://amd.rd.naro.go.jp/opendap/dev) から取得するため、`server`引数の挙動を変更しました (エンドユーザに影響は出ません)。
 
 <!-- ## 4. 実践的な使用例 -->
 

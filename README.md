@@ -59,7 +59,7 @@ library(jpndistrict)
 #> Image) published by Geospatial Information Authority of Japan (Approval
 #> No.603FY2017 information usage <https://www.gsi.go.jp>)
 library(agrmesh)
-#> ℹ WELCOME to R-AMGSDS interface (ver.0.0.1.3) 
+#> ℹ WELCOME to R-AMGSDS interface (ver.0.0.1.4) 
 #> ℹ 農研機構は、農業分野や他の分野における研究・開発・教育・試用を目的とする者に、審査に基づきメッシュ農業気象データ（以下、「このデータ」と呼ぶ。）の利用を許可します。
 #> ℹ 特に許可されない限り、このデータを他に転載したり第三者に提供したりすることはできません。
 #> ℹ このデータを利用して作成した情報を販売することはできません。
@@ -88,8 +88,8 @@ print(point_daily_temp)
 #> # A tibble: 2 × 5
 #>   time         lat   lon site_id TMP_mea
 #>   <date>     <dbl> <dbl> <chr>     <dbl>
-#> 1 2024-05-13  43.0  141. 1          13.3
-#> 2 2024-05-13  26.2  128. 2          22.7
+#> 1 2024-05-14  43.0  141. 1          15.5
+#> 2 2024-05-14  26.2  128. 2          22.8
 ```
 
 出力された`point_daily_temp`は、日付 (`time`)、緯度・経度
@@ -137,7 +137,7 @@ fetch_amgsds(
   RCP = "RCP8.5",     # 将来気候データ作成に用いた排出シナリオ名
                       # source == "scenario"の場合にのみ有効
   is_clim = FALSE,    # TRUEならば平年値を表示する
-  server = "https://amd.rd.naro.go.jp/",
+  server = "amd.rd.naro.go.jp/opendap",
                       # OPeNDAPサーバーのURL
   .silent = TRUE      # FALSEならばダウンロードファイルサイズ等の情報を表示
 )
@@ -478,7 +478,7 @@ MB 程度です。
 args(load_amgsds)
 #> function (times = Sys.time(), lats, lons, elements, mode = "point", 
 #>     source = "daily", output = "tibble", model = "MIROC5", RCP = "RCP8.5", 
-#>     is_clim = FALSE, server = "amd.rd.naro.go.jp", .silent = TRUE, 
+#>     is_clim = FALSE, server = "amd.rd.naro.go.jp/opendap", .silent = TRUE, 
 #>     localdir, autodownload = FALSE) 
 #> NULL
 ```
@@ -570,6 +570,11 @@ jpndistrictパッケージが提供する行政区画データを利用した図
   - {leaflet}の更新に対応し、`plot2d_leaflet`時の背景地図を変更しました。
 - 2024-02-25 (ver. 0.0.1.0003)
   - 取得可能な時別データのリストを更新しました。
+- 2024-05-14 (ver. 0.0.1.0004)
+  - 試験開発要素をOpendapサーバ
+    (<https://amd.rd.naro.go.jp/opendap/dev>)
+    から取得するため、`server`引数の挙動を変更しました
+    (エンドユーザに影響は出ません)。
 
 <!-- ## 4. 実践的な使用例 -->
 <!-- いくつかの実践的なサンプルを示します。 -->
