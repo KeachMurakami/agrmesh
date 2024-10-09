@@ -180,8 +180,12 @@ download_netcdf <-
 
     remote <- stringr::str_glue('https://{Sys.getenv("amgsds_id")}:{Sys.getenv("amgsds_pw")}@{server}/')
 
-    nonempty_mesh <- stringr::str_c(paste0("p", nonempty_meshes), collapse = "|")
-    available_path <- stringr::str_subset(amgsds_path, nonempty_mesh)
+    if(stringr::str_detect(amgsds_path[1], "AMSy....p")){
+      valid_meshes <- stringr::str_c(paste0("p", nonempty_meshes_fewer), collapse = "|")
+    } else {
+      valid_meshes <- stringr::str_c(paste0("p", nonempty_meshes), collapse = "|")
+    }
+    available_path <- stringr::str_subset(amgsds_path, valid_meshes)
 
     from <- paste0(remote, available_path)
     to <- paste0(outdir, available_path)
@@ -252,7 +256,13 @@ read_netcdf <-
 
     } else if(output == "array"){
 
-      is_available <- stringr::str_extract(basename(amgsds_path), "p[:digit:]{4}") %in% paste0("p", nonempty_meshes)
+      if(stringr::str_detect(amgsds_path[1], "AMSy....p")){
+        valid_meshes <- stringr::str_c(paste0("p", nonempty_meshes_fewer), collapse = "|")
+      } else {
+        valid_meshes <- stringr::str_c(paste0("p", nonempty_meshes), collapse = "|")
+      }
+
+      is_available <- stringr::str_extract(basename(amgsds_path), "p[:digit:]{4}") %in% paste0("p", valid_meshes)
 
       if(is_geo){
         axis <- list(lon = "lon", lat = "lat")
@@ -523,9 +533,15 @@ load_amgsds <-
         generate_path(times, lats, lons, elements, source = source,
                       model = model, RCP = RCP, is_clim = is_clim)
 
+      if(stringr::str_detect(amgsds_path[1], "AMSy....p")){
+        valid_meshes <- stringr::str_c(paste0("p", nonempty_meshes_fewer), collapse = "|")
+      } else {
+        valid_meshes <- stringr::str_c(paste0("p", nonempty_meshes), collapse = "|")
+      }
+
       # check if all mesh data available
       not_exist <- !file.exists(paste0(localdir, amgsds_path[["complete"]]))
-      is_available <- stringr::str_extract(basename(amgsds_path[["complete"]]), "p[:digit:]{4}") %in% paste0("p", nonempty_meshes)
+      is_available <- stringr::str_extract(basename(amgsds_path[["complete"]]), "p[:digit:]{4}") %in% paste0("p", valid_meshes)
 
       if(sum(not_exist & is_available) > 0 & autodownload){
 
