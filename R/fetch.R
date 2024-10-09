@@ -178,7 +178,7 @@ replace_stop_words <-
 download_netcdf <-
   function(amgsds_path, outdir, server, .silent = TRUE){
 
-    remote <- stringr::str_glue('https://{Sys.getenv("amgsds_id")}:{Sys.getenv("amgsds_pw")}@{server}/')
+    remote <- stringr::str_glue('https://{server}/')
 
     if(stringr::str_detect(amgsds_path[1], "AMSy....p")){
       valid_meshes <- stringr::str_c(paste0("p", nonempty_meshes_fewer), collapse = "|")
@@ -189,6 +189,13 @@ download_netcdf <-
 
     from <- paste0(remote, available_path)
     to <- paste0(outdir, available_path)
+
+    # curl handler for Basic access authentication
+    handle <- curl::new_handle()
+    curl::handle_setopt(handle, userpwd = stringr::str_glue('{Sys.getenv("amgsds_id")}:{Sys.getenv("amgsds_pw")}'))
+    curl::handle_setopt(handle, sslversion = 6)
+    curl::handle_setopt(handle, useragent = 'curl/7.50.1')
+    curl::handle_setopt(handle, httpheader = c('Accept' = '*/*'))
 
     suppressWarnings({
       purrr::walk(dirname(to), dir.create, recursive = TRUE, showWarnings = FALSE)
