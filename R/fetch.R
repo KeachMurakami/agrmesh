@@ -201,7 +201,7 @@ download_netcdf <-
       purrr::walk(dirname(to), dir.create, recursive = TRUE, showWarnings = FALSE)
 
       tryCatch({
-        purrr::walk2(from, replace_stop_words(to), ~ curl::curl_download(url = .x, destfile = .y, quiet = .silent))
+        purrr::walk2(from, replace_stop_words(to), ~ curl::curl_download(url = .x, destfile = .y, quiet = .silent, handle = handle))
       },
       error = function(e){
         stop("\u30c7\u30fc\u30bf\u306e\u53d6\u5f97\u306b\u5931\u6557\u3057\u307e\u3057\u305f\u3002amgsds_config()\u3092\u5b9f\u884c\u3057\u3001\u30cd\u30c3\u30c8\u30ef\u30fc\u30af\u306b\u63a5\u7d9a\u3055\u308c\u3066\u3044\u308b\u304b\u3001ID\u30fbPW\u304c\u8a8d\u8a3c\u3055\u308c\u308b\u304b\u3001\u306e\uff12\u70b9\u3092\u78ba\u8a8d\u3057\u3066\u304f\u3060\u3055\u3044\u3002\r\n\u5c06\u6765\u30b7\u30ca\u30ea\u30aa\u30c7\u30fc\u30bf\u3092\u5229\u7528\u3057\u3066\u3044\u308b\u5834\u5408\u306b\u306f\u3001\u30e2\u30c7\u30eb\u3068RCP\u3001\u5bfe\u8c61\u6642\u671f\u304c\u9069\u5207\u306b\u8a2d\u5b9a\u3055\u308c\u3066\u3044\u308b\u304b\u3092\u78ba\u8a8d\u3057\u3066\u304f\u3060\u3055\u3044\u3002")
