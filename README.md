@@ -29,7 +29,7 @@ install.packages("sf") # shapeデータの利用のため
 install.packages('https://cran.r-project.org/src/contrib/Archive/tidync/tidync_0.3.0.tar.gz', repos=NULL, type='source') # NetCDFデータの利用のため
 devtools::install_github("uribo/jpndistrict") # 国内の行政区画データの利用のため
 
-devtools::install_github("KeachMurakami/agrmesh")
+devtools::install_github("KeachMurakami/agrmesh", upgrade = FALSE)
 ```
 
 インストール後に、`library(agrmesh)`を実行し、パッケージを読み込みます。
