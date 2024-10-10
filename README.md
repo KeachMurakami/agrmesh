@@ -19,10 +19,14 @@ LTS)で動作することが確認されていますが、とくにAppleCPUのMa
 [公式ページ](https://r-spatial.github.io/sf/)を参照し、必要な手続きを終えてから以下のスクリプトをRstudio上で実行してください。
 
 インストール時にエラーが出た場合にはエラーメッセージを確認し、不足を指摘されたパッケージをインストールしたうえで、再度`agrmesh`パッケージのインストールを実施してください。
+`tidync`パッケージはver. 0.3.0である必要があります。
+`devtools::install_github("KeachMurakami/agrmesh")`時にも`tidync`はアップデートしないでください。
 
 ``` r
-install.packages("devtools") # if not installed
+install.packages("devtools")
+ 
 install.packages("sf") # shapeデータの利用のため
+install.packages('https://cran.r-project.org/src/contrib/Archive/tidync/tidync_0.3.0.tar.gz', repos=NULL, type='source') # NetCDFデータの利用のため
 devtools::install_github("uribo/jpndistrict") # 国内の行政区画データの利用のため
 
 devtools::install_github("KeachMurakami/agrmesh")
@@ -47,7 +51,7 @@ library(tidyverse)
 #> ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 #> ✔ dplyr     1.1.4     ✔ readr     2.1.5
 #> ✔ forcats   1.0.0     ✔ stringr   1.5.1
-#> ✔ ggplot2   3.4.4     ✔ tibble    3.2.1
+#> ✔ ggplot2   3.5.1     ✔ tibble    3.2.1
 #> ✔ lubridate 1.9.3     ✔ tidyr     1.3.1
 #> ✔ purrr     1.0.2     
 #> ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
@@ -59,14 +63,8 @@ library(jpndistrict)
 #> Image) published by Geospatial Information Authority of Japan (Approval
 #> No.603FY2017 information usage <https://www.gsi.go.jp>)
 library(agrmesh)
-#> ℹ WELCOME to R-AMGSDS interface (ver.0.0.1.4) 
-#> ℹ 農研機構は、農業分野や他の分野における研究・開発・教育・試用を目的とする者に、審査に基づきメッシュ農業気象データ（以下、「このデータ」と呼ぶ。）の利用を許可します。
-#> ℹ 特に許可されない限り、このデータを他に転載したり第三者に提供したりすることはできません。
-#> ℹ このデータを利用して作成した情報を販売することはできません。
-#> ℹ 利用者は、利用期間の終了後、速やかに利用報告をすることとします。
-#> ℹ 農研機構は、利用者がこのデータの利用によって生じた結果、ならびに、このデータが利用できないことによって生じた結果について、いかなる責任も負いません。
-#> ℹ このデータを利用して得た成果等を公表する場合は、「農研機構メッシュ農業気象データ（The Agro-Meteorological Grid Square Data, NARO）」を利用した旨を明記してください。
-#> ✔ USERID and PASSWORD -> verified
+#> Loading required package: tidync
+#> ℹ WELCOME to R-AMGSDS interface (ver.0.0.1.5) ℹ 農研機構は、農業分野や他の分野における研究・開発・教育・試用を目的とする者に、審査に基づきメッシュ農業気象データ（以下、「このデータ」と呼ぶ。）の利用を許可します。ℹ 特に許可されない限り、このデータを他に転載したり第三者に提供したりすることはできません。ℹ このデータを利用して作成した情報を販売することはできません。ℹ 利用者は、利用期間の終了後、速やかに利用報告をすることとします。ℹ 農研機構は、利用者がこのデータの利用によって生じた結果、ならびに、このデータが利用できないことによって生じた結果について、いかなる責任も負いません。ℹ このデータを利用して得た成果等を公表する場合は、「農研機構メッシュ農業気象データ（The Agro-Meteorological Grid Square Data, NARO）」を利用した旨を明記してください。✔ USERID and PASSWORD -> verified
 ```
 
 ## 2. オンラインでの利用
@@ -88,8 +86,8 @@ print(point_daily_temp)
 #> # A tibble: 2 × 5
 #>   time         lat   lon site_id TMP_mea
 #>   <date>     <dbl> <dbl> <chr>     <dbl>
-#> 1 2024-05-14  43.0  141. 1          15.5
-#> 2 2024-05-14  26.2  128. 2          22.8
+#> 1 2024-10-10  43.0  141. 1          12.2
+#> 2 2024-10-10  26.2  128. 2          25.8
 ```
 
 出力された`point_daily_temp`は、日付 (`time`)、緯度・経度
@@ -292,6 +290,7 @@ image(area_daily_rain[,,1])
 
 # install.packages("fields") # if not installed
 library(fields)
+#> Warning: package 'fields' was built under R version 4.3.3
 #> Loading required package: spam
 #> Spam version 2.10-0 (2023-10-23) is loaded.
 #> Type 'help( Spam)' or 'demo( spam)' for a short introduction 
@@ -323,16 +322,16 @@ print(area_daily_rain_long)
 #> # A tibble: 38,660 × 4
 #>    time         lat   lon  APCP
 #>    <date>     <dbl> <dbl> <dbl>
-#>  1 2023-01-10  41.5  140.  7.54
-#>  2 2023-01-10  41.5  140.  7.90
-#>  3 2023-01-10  41.5  140.  8.07
-#>  4 2023-01-10  41.5  140.  8.20
-#>  5 2023-01-10  41.5  140.  8.24
-#>  6 2023-01-10  41.5  140.  8.37
-#>  7 2023-01-10  41.5  140.  8.27
-#>  8 2023-01-10  41.5  140.  8.30
-#>  9 2023-01-10  41.5  140.  7.93
-#> 10 2023-01-10  41.5  140.  7.22
+#>  1 2023-01-10  41.5  140.   7.5
+#>  2 2023-01-10  41.5  140.   7.9
+#>  3 2023-01-10  41.5  140.   8.1
+#>  4 2023-01-10  41.5  140.   8.2
+#>  5 2023-01-10  41.5  140.   8.2
+#>  6 2023-01-10  41.5  140.   8.4
+#>  7 2023-01-10  41.5  140.   8.3
+#>  8 2023-01-10  41.5  140.   8.3
+#>  9 2023-01-10  41.5  140.   7.9
+#> 10 2023-01-10  41.5  140.   7.2
 #> # ℹ 38,650 more rows
 ```
 
@@ -416,13 +415,13 @@ area_sado_temps <-
 
 str(area_sado_temps)
 #> List of 2
-#>  $ : num [1:33, 1:73, 1:2] NA NA NA 25.4 25.3 ...
+#>  $ : num [1:33, 1:73, 1:2] NA NA NA 25.4 25.3 25.4 25.5 NA NA NA ...
 #>   ..- attr(*, "axes")=List of 3
 #>   .. ..$ lon : num [1:33] 138 138 138 138 138 ...
 #>   .. ..$ lat : num [1:73] 37.8 37.8 37.8 37.8 37.8 ...
 #>   .. ..$ time: Date[1:2], format: "1990-07-15" "1990-07-16"
 #>   ..- attr(*, "variable")= chr "TMP_max"
-#>  $ : num [1:33, 1:73, 1:2] NA NA NA 22.6 22.5 ...
+#>  $ : num [1:33, 1:73, 1:2] NA NA NA 22.6 22.5 22.5 22.5 NA NA NA ...
 #>   ..- attr(*, "axes")=List of 3
 #>   .. ..$ lon : num [1:33] 138 138 138 138 138 ...
 #>   .. ..$ lat : num [1:73] 37.8 37.8 37.8 37.8 37.8 ...
@@ -454,6 +453,10 @@ unfold_array(area_sado_temps) %>%
 ```
 
 <img src="man/figures/README-fetch_multiple_array-1.png" width="100%" />
+
+最新のバージョンでは、数百 km
+スケールでの広域にまたがってのデータ取得の場合に`output = "array"`とするとエラーが発生します。
+必要に応じて`tibble`形式でのダウンロード後に[リンク](https://github.com/KeachMurakami/agrmesh/issues/3)先のように持ち変えを行ってください。
 
 ## 3. オフラインでの利用
 
@@ -490,16 +493,17 @@ area_photoperiod <-
     lats = 34:35, lons = 135:136,
     elements = "SSD",
     mode = "area",
-    output = "array",
+    output = "tibble",
     
     localdir = "~/amd_working/",  # 保存先フォルダ
     autodownload = TRUE           # 自動ダウンロードを許可
   )
+#> Warning in stri_detect_regex(string, pattern, negate = negate, opts_regex =
+#> opts(pattern)): argument is not an atomic vector; coercing
 #> ℹ SSDのNetCDFファイルをOPeNDAPサーバからダウンロードします。
 
 
 area_photoperiod %>%
-  unfold_array() %>%
   plot2d_shape(time_index = 2:3, alpha = .7, pref_code = 26:30)
 #> Warning:
 #> 6個の日付・時刻のデータが存在します。`time_index`で指定された2-3番目のデータのみが表示されています。
@@ -575,6 +579,9 @@ jpndistrictパッケージが提供する行政区画データを利用した図
     (<https://amd.rd.naro.go.jp/opendap/dev>)
     から取得するため、`server`引数の挙動を変更しました
     (エンドユーザに影響は出ません)。
+- 2024-10-09 (ver. 0.0.1.0005)
+  - データを広範囲で取得する場合に生じていたエラーを解消しました。
+  - 現バージョンは`array`形式での広範囲データ取得には対応していません。
 
 <!-- ## 4. 実践的な使用例 -->
 <!-- いくつかの実践的なサンプルを示します。 -->

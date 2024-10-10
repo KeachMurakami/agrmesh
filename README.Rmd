@@ -33,10 +33,14 @@ Rstudioでの利用を想定しています。
 [公式ページ](https://r-spatial.github.io/sf/)を参照し、必要な手続きを終えてから以下のスクリプトをRstudio上で実行してください。
 
 インストール時にエラーが出た場合にはエラーメッセージを確認し、不足を指摘されたパッケージをインストールしたうえで、再度`agrmesh`パッケージのインストールを実施してください。
+`tidync`パッケージはver. 0.3.0である必要があります。
+`devtools::install_github("KeachMurakami/agrmesh")`時にも`tidync`はアップデートしないでください。
 
 ```{r setup, eval = FALSE}
-install.packages("devtools") # if not installed
+install.packages("devtools")
+ 
 install.packages("sf") # shapeデータの利用のため
+install.packages('https://cran.r-project.org/src/contrib/Archive/tidync/tidync_0.3.0.tar.gz', repos=NULL, type='source') # NetCDFデータの利用のため
 devtools::install_github("uribo/jpndistrict") # 国内の行政区画データの利用のため
 
 devtools::install_github("KeachMurakami/agrmesh")
@@ -332,6 +336,8 @@ unfold_array(area_sado_temps) %>%
 ```
 
 
+最新のバージョンでは、数百 km スケールでの広域にまたがってのデータ取得の場合に`output = "array"`とするとエラーが発生します。
+必要に応じて`tibble`形式でのダウンロード後に[リンク](https://github.com/KeachMurakami/agrmesh/issues/3)先のように持ち変えを行ってください。
 
 ## 3. オフラインでの利用
 
@@ -362,7 +368,7 @@ area_photoperiod <-
     lats = 34:35, lons = 135:136,
     elements = "SSD",
     mode = "area",
-    output = "array",
+    output = "tibble",
     
     localdir = "~/amd_working/",  # 保存先フォルダ
     autodownload = TRUE           # 自動ダウンロードを許可
@@ -370,7 +376,6 @@ area_photoperiod <-
 
 
 area_photoperiod %>%
-  unfold_array() %>%
   plot2d_shape(time_index = 2:3, alpha = .7, pref_code = 26:30)
 ```
 
@@ -439,6 +444,10 @@ jpndistrictパッケージが提供する行政区画データを利用した図
     - 取得可能な時別データのリストを更新しました。
 - 2024-05-14 (ver. 0.0.1.0004)
     - 試験開発要素をOpendapサーバ (https://amd.rd.naro.go.jp/opendap/dev) から取得するため、`server`引数の挙動を変更しました (エンドユーザに影響は出ません)。
+- 2024-10-09 (ver. 0.0.1.0005)
+    - データを広範囲で取得する場合に生じていたエラーを解消しました。 
+    - 現バージョンは`array`形式での広範囲データ取得には対応していません。
+
 
 <!-- ## 4. 実践的な使用例 -->
 

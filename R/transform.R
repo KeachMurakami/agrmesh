@@ -52,3 +52,36 @@ unfold_array <-
 
     return(result)
   }
+
+#' Conver long-format tibble to array
+#'
+#' @name fold_tibble
+#' @param amgsds_tibble AMGSDS tibble object (output = "tibble")
+#' @importFrom rlang .data
+#'
+#' @export
+fold_tibble <-
+  function(amgsds_tibble){
+
+    variable <- setdiff(names(amgsds_tibble), c("time", "lat", "lon"))
+    # when a single element is fetched
+
+    purrr::map(variable, function(v){
+      array <-
+        split(amgsds_tibble, amgsds_tibble$time) |>
+        purrr::map(function(x){
+          dplyr::select(x, .data$lat, .data$lon, tidyselect::all_of(v)) |>
+          tidyr::spread(lat, !!(v)) |>
+          dplyr::select(-.data$lon)
+        }) |>
+        abind::abind(along = 3)
+
+      dimnames(array) <- c(NULL, NULL, NULL)
+      attr(array, which = "axes") <- list(lon = sort(unique(amgsds_tibble$lon)),
+                                          lat = sort(unique(amgsds_tibble$lat)),
+                                          time = sort(unique(amgsds_tibble$time)))
+      attr(array, which = "variable") <- v
+
+      return(array)
+    })
+  }

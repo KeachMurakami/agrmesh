@@ -541,14 +541,14 @@ load_amgsds <-
                       model = model, RCP = RCP, is_clim = is_clim)
 
       if(stringr::str_detect(amgsds_path[1], "AMSy....p")){
-        valid_meshes <- stringr::str_c(paste0("p", nonempty_meshes_fewer), collapse = "|")
+        valid_meshes <- paste0("p", nonempty_meshes_fewer)
       } else {
-        valid_meshes <- stringr::str_c(paste0("p", nonempty_meshes), collapse = "|")
+        valid_meshes <- paste0("p", nonempty_meshes)
       }
 
       # check if all mesh data available
       not_exist <- !file.exists(paste0(localdir, amgsds_path[["complete"]]))
-      is_available <- stringr::str_extract(basename(amgsds_path[["complete"]]), "p[:digit:]{4}") %in% paste0("p", valid_meshes)
+      is_available <- stringr::str_extract(basename(amgsds_path[["complete"]]), "p[:digit:]{4}") %in% valid_meshes
 
       if(sum(not_exist & is_available) > 0 & autodownload){
 
