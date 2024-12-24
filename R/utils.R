@@ -29,21 +29,21 @@ preview_dataset <-
       availability_table <-
         tibble::tribble(
           ~ element, ~ unit,    ~ from,            ~ to,              ~ clim_from,       ~ description,
-          "TMP_mea", "\u00b0C", ymd("1980-01-01", tz = "Asia/Tokyo"), ymd("2024-12-31", tz = "Asia/Tokyo"), ymd("2011-01-01", tz = "Asia/Tokyo"), "\u65e5\u5e73\u5747\u6c17\u6e29",
-          "TMP_max", "\u00b0C", ymd("1980-01-01", tz = "Asia/Tokyo"), ymd("2024-12-31", tz = "Asia/Tokyo"), ymd("2011-01-01", tz = "Asia/Tokyo"), "\u65e5\u6700\u9ad8\u6c17\u6e29",
-          "TMP_min", "\u00b0C", ymd("1980-01-01", tz = "Asia/Tokyo"), ymd("2024-12-31", tz = "Asia/Tokyo"), ymd("2011-01-01", tz = "Asia/Tokyo"), "\u65e5\u6700\u4f4e\u6c17\u6e29",
-          "APCP",    "mm d-1",  ymd("1980-01-01", tz = "Asia/Tokyo"), ymd("2024-12-31", tz = "Asia/Tokyo"), ymd("2011-01-01", tz = "Asia/Tokyo"), "\u964d\u6c34\u91cf",
-          "APCPRA",  "mm d-1",  ymd("2008-01-01", tz = "Asia/Tokyo"), ymd("2024-12-31", tz = "Asia/Tokyo"), ymd("2011-01-01", tz = "Asia/Tokyo"), "\u964d\u6c34\u91cf",
-          "OPR",     "-",       ymd("1980-01-01", tz = "Asia/Tokyo"), ymd("2024-12-31", tz = "Asia/Tokyo"), ymd("2011-01-01", tz = "Asia/Tokyo"), "1 mm\u4ee5\u4e0a\u306e\u964d\u6c34\u306e\u6709\u7121",
-          "SSD",     "h",       ymd("1980-01-01", tz = "Asia/Tokyo"), ymd("2024-12-31", tz = "Asia/Tokyo"), ymd("2011-01-01", tz = "Asia/Tokyo"), "\u65e5\u7167\u6642\u9593",
-          "GSR",     "MJ m-2",  ymd("1980-01-01", tz = "Asia/Tokyo"), ymd("2024-12-31", tz = "Asia/Tokyo"), ymd("2011-01-01", tz = "Asia/Tokyo"), "\u5168\u5929\u65e5\u5c04\u91cf",
-          "DLR",     "MJ m-2",  ymd("2008-01-01", tz = "Asia/Tokyo"), ymd("2024-12-31", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u4e0b\u5411\u304d\u9577\u6ce2\u653e\u5c04\u91cf",
-          "RH",      "%",       ymd("2008-01-01", tz = "Asia/Tokyo"), ymd("2024-12-31", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u65e5\u5e73\u5747\u76f8\u5bfe\u6e7f\u5ea6",
-          "WIND",    "m s-1",   ymd("1980-01-01", tz = "Asia/Tokyo"), ymd("2024-12-31", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u65e5\u5e73\u5747\u98a8\u901f",
-          "SD",      "cm",      ymd("1980-10-01", tz = "Asia/Tokyo"), ymd("2024-12-31", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u7a4d\u96ea\u6df1",
-          "SWE",     "mm",      ymd("1980-10-01", tz = "Asia/Tokyo"), ymd("2024-12-31", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u7a4d\u96ea\u76f8\u5f53\u6c34\u91cf",
-          "SFW",     "mm d-1",  ymd("1980-10-01", tz = "Asia/Tokyo"), ymd("2024-12-31", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u65e5\u964d\u96ea\u76f8\u5f53\u6c34\u91cf",
-          "PTMP",    "-",       lubridate::today(tz = "Asia/Tokyo"),  ymd("2024-12-31", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u4e88\u5831\u6c17\u6e29\u306e\u78ba\u304b\u3089\u3057\u3055")
+          "TMP_mea", "\u00b0C", ymd("1980-01-01", tz = "Asia/Tokyo"), ymd("2025-12-31", tz = "Asia/Tokyo"), ymd("2011-01-01", tz = "Asia/Tokyo"), "\u65e5\u5e73\u5747\u6c17\u6e29",
+          "TMP_max", "\u00b0C", ymd("1980-01-01", tz = "Asia/Tokyo"), ymd("2025-12-31", tz = "Asia/Tokyo"), ymd("2011-01-01", tz = "Asia/Tokyo"), "\u65e5\u6700\u9ad8\u6c17\u6e29",
+          "TMP_min", "\u00b0C", ymd("1980-01-01", tz = "Asia/Tokyo"), ymd("2025-12-31", tz = "Asia/Tokyo"), ymd("2011-01-01", tz = "Asia/Tokyo"), "\u65e5\u6700\u4f4e\u6c17\u6e29",
+          "APCP",    "mm d-1",  ymd("1980-01-01", tz = "Asia/Tokyo"), ymd("2025-12-31", tz = "Asia/Tokyo"), ymd("2011-01-01", tz = "Asia/Tokyo"), "\u964d\u6c34\u91cf",
+          "APCPRA",  "mm d-1",  ymd("2008-01-01", tz = "Asia/Tokyo"), ymd("2025-12-31", tz = "Asia/Tokyo"), ymd("2011-01-01", tz = "Asia/Tokyo"), "\u964d\u6c34\u91cf",
+          "OPR",     "-",       ymd("1980-01-01", tz = "Asia/Tokyo"), ymd("2025-12-31", tz = "Asia/Tokyo"), ymd("2011-01-01", tz = "Asia/Tokyo"), "1 mm\u4ee5\u4e0a\u306e\u964d\u6c34\u306e\u6709\u7121",
+          "SSD",     "h",       ymd("1980-01-01", tz = "Asia/Tokyo"), ymd("2025-12-31", tz = "Asia/Tokyo"), ymd("2011-01-01", tz = "Asia/Tokyo"), "\u65e5\u7167\u6642\u9593",
+          "GSR",     "MJ m-2",  ymd("1980-01-01", tz = "Asia/Tokyo"), ymd("2025-12-31", tz = "Asia/Tokyo"), ymd("2011-01-01", tz = "Asia/Tokyo"), "\u5168\u5929\u65e5\u5c04\u91cf",
+          "DLR",     "MJ m-2",  ymd("2008-01-01", tz = "Asia/Tokyo"), ymd("2025-12-31", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u4e0b\u5411\u304d\u9577\u6ce2\u653e\u5c04\u91cf",
+          "RH",      "%",       ymd("2008-01-01", tz = "Asia/Tokyo"), ymd("2025-12-31", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u65e5\u5e73\u5747\u76f8\u5bfe\u6e7f\u5ea6",
+          "WIND",    "m s-1",   ymd("1980-01-01", tz = "Asia/Tokyo"), ymd("2025-12-31", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u65e5\u5e73\u5747\u98a8\u901f",
+          "SD",      "cm",      ymd("1980-10-01", tz = "Asia/Tokyo"), ymd("2025-12-31", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u7a4d\u96ea\u6df1",
+          "SWE",     "mm",      ymd("1980-10-01", tz = "Asia/Tokyo"), ymd("2025-12-31", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u7a4d\u96ea\u76f8\u5f53\u6c34\u91cf",
+          "SFW",     "mm d-1",  ymd("1980-10-01", tz = "Asia/Tokyo"), ymd("2025-12-31", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u65e5\u964d\u96ea\u76f8\u5f53\u6c34\u91cf",
+          "PTMP",    "-",       lubridate::today(tz = "Asia/Tokyo"),  ymd("2025-12-31", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u4e88\u5831\u6c17\u6e29\u306e\u78ba\u304b\u3089\u3057\u3055")
     } else if(source == "hourly"){
       availability_table <-
         tibble::tribble(
