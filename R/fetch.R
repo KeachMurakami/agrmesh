@@ -176,7 +176,7 @@ replace_stop_words <-
 #' @param .silent suppress download messages if `TRUE`
 #' @export
 download_netcdf <-
-  function(amgsds_path, outdir, server, .silent = TRUE){
+  function(amgsds_path, outdir, server = "amd.rd.naro.go.jp/opendap", .silent = TRUE){
 
     remote <- stringr::str_glue('https://{server}/')
 
