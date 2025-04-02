@@ -25,128 +25,139 @@ check_latlon_range <-
 #' @export
 preview_dataset <-
   function(source = "daily", internal_use = FALSE){
+    end_of_next_year <- ymd(paste0(lubridate::year(lubridate::today()) + 1, "-12-31"), tz = "Asia/Tokyo")
+    date_19800101 <- ymd("1980-01-01", tz = "Asia/Tokyo")
+    date_19801001 <- ymd("1980-10-01", tz = "Asia/Tokyo")
+    date_19810101 <- ymd("1981-01-01", tz = "Asia/Tokyo")
+    date_20080101 <- ymd("2008-01-01", tz = "Asia/Tokyo")
+    date_20110101 <- ymd("2011-01-01", tz = "Asia/Tokyo")
+    date_21001231 <- ymd("2100-12-31", tz = "Asia/Tokyo")
+
+    date_00010101 <- ymd("0001-12-31", tz = "Asia/Tokyo")
+    date_99991231 <- ymd("9999-12-31", tz = "Asia/Tokyo")
+
     if(source == "daily"){
       availability_table <-
         tibble::tribble(
           ~ element, ~ unit,    ~ from,            ~ to,              ~ clim_from,       ~ description,
-          "TMP_mea", "\u00b0C", ymd("1980-01-01", tz = "Asia/Tokyo"), ymd("2025-12-31", tz = "Asia/Tokyo"), ymd("2011-01-01", tz = "Asia/Tokyo"), "\u65e5\u5e73\u5747\u6c17\u6e29",
-          "TMP_max", "\u00b0C", ymd("1980-01-01", tz = "Asia/Tokyo"), ymd("2025-12-31", tz = "Asia/Tokyo"), ymd("2011-01-01", tz = "Asia/Tokyo"), "\u65e5\u6700\u9ad8\u6c17\u6e29",
-          "TMP_min", "\u00b0C", ymd("1980-01-01", tz = "Asia/Tokyo"), ymd("2025-12-31", tz = "Asia/Tokyo"), ymd("2011-01-01", tz = "Asia/Tokyo"), "\u65e5\u6700\u4f4e\u6c17\u6e29",
-          "APCP",    "mm d-1",  ymd("1980-01-01", tz = "Asia/Tokyo"), ymd("2025-12-31", tz = "Asia/Tokyo"), ymd("2011-01-01", tz = "Asia/Tokyo"), "\u964d\u6c34\u91cf",
-          "APCPRA",  "mm d-1",  ymd("2008-01-01", tz = "Asia/Tokyo"), ymd("2025-12-31", tz = "Asia/Tokyo"), ymd("2011-01-01", tz = "Asia/Tokyo"), "\u964d\u6c34\u91cf",
-          "OPR",     "-",       ymd("1980-01-01", tz = "Asia/Tokyo"), ymd("2025-12-31", tz = "Asia/Tokyo"), ymd("2011-01-01", tz = "Asia/Tokyo"), "1 mm\u4ee5\u4e0a\u306e\u964d\u6c34\u306e\u6709\u7121",
-          "SSD",     "h",       ymd("1980-01-01", tz = "Asia/Tokyo"), ymd("2025-12-31", tz = "Asia/Tokyo"), ymd("2011-01-01", tz = "Asia/Tokyo"), "\u65e5\u7167\u6642\u9593",
-          "GSR",     "MJ m-2",  ymd("1980-01-01", tz = "Asia/Tokyo"), ymd("2025-12-31", tz = "Asia/Tokyo"), ymd("2011-01-01", tz = "Asia/Tokyo"), "\u5168\u5929\u65e5\u5c04\u91cf",
-          "DLR",     "MJ m-2",  ymd("2008-01-01", tz = "Asia/Tokyo"), ymd("2025-12-31", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u4e0b\u5411\u304d\u9577\u6ce2\u653e\u5c04\u91cf",
-          "RH",      "%",       ymd("2008-01-01", tz = "Asia/Tokyo"), ymd("2025-12-31", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u65e5\u5e73\u5747\u76f8\u5bfe\u6e7f\u5ea6",
-          "WIND",    "m s-1",   ymd("1980-01-01", tz = "Asia/Tokyo"), ymd("2025-12-31", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u65e5\u5e73\u5747\u98a8\u901f",
-          "SD",      "cm",      ymd("1980-10-01", tz = "Asia/Tokyo"), ymd("2025-12-31", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u7a4d\u96ea\u6df1",
-          "SWE",     "mm",      ymd("1980-10-01", tz = "Asia/Tokyo"), ymd("2025-12-31", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u7a4d\u96ea\u76f8\u5f53\u6c34\u91cf",
-          "SFW",     "mm d-1",  ymd("1980-10-01", tz = "Asia/Tokyo"), ymd("2025-12-31", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u65e5\u964d\u96ea\u76f8\u5f53\u6c34\u91cf",
-          "PTMP",    "-",       lubridate::today(tz = "Asia/Tokyo"),  ymd("2025-12-31", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u4e88\u5831\u6c17\u6e29\u306e\u78ba\u304b\u3089\u3057\u3055")
+          "TMP_mea", "\u00b0C", date_19800101, end_of_next_year, date_20110101, "\u65e5\u5e73\u5747\u6c17\u6e29",
+          "TMP_max", "\u00b0C", date_19800101, end_of_next_year, date_20110101, "\u65e5\u6700\u9ad8\u6c17\u6e29",
+          "TMP_min", "\u00b0C", date_19800101, end_of_next_year, date_20110101, "\u65e5\u6700\u4f4e\u6c17\u6e29",
+          "APCP",    "mm d-1",  date_19800101, end_of_next_year, date_20110101, "\u964d\u6c34\u91cf",
+          "APCPRA",  "mm d-1",  date_20080101, end_of_next_year, date_20110101, "\u964d\u6c34\u91cf",
+          "OPR",     "-",       date_19800101, end_of_next_year, date_20110101, "1 mm\u4ee5\u4e0a\u306e\u964d\u6c34\u306e\u6709\u7121",
+          "SSD",     "h",       date_19800101, end_of_next_year, date_20110101, "\u65e5\u7167\u6642\u9593",
+          "GSR",     "MJ m-2",  date_19800101, end_of_next_year, date_20110101, "\u5168\u5929\u65e5\u5c04\u91cf",
+          "DLR",     "MJ m-2",  date_20080101, end_of_next_year, date_99991231, "\u4e0b\u5411\u304d\u9577\u6ce2\u653e\u5c04\u91cf",
+          "RH",      "%",       date_20080101, end_of_next_year, date_99991231, "\u65e5\u5e73\u5747\u76f8\u5bfe\u6e7f\u5ea6",
+          "WIND",    "m s-1",   date_19800101, end_of_next_year, date_99991231, "\u65e5\u5e73\u5747\u98a8\u901f",
+          "SD",      "cm",      date_19801001, end_of_next_year, date_99991231, "\u7a4d\u96ea\u6df1",
+          "SWE",     "mm",      date_19801001, end_of_next_year, date_99991231, "\u7a4d\u96ea\u76f8\u5f53\u6c34\u91cf",
+          "SFW",     "mm d-1",  date_19801001, end_of_next_year, date_99991231, "\u65e5\u964d\u96ea\u76f8\u5f53\u6c34\u91cf",
+          "PTMP",    "-",       lubridate::today(tz = "Asia/Tokyo"),  end_of_next_year, date_99991231, "\u4e88\u5831\u6c17\u6e29\u306e\u78ba\u304b\u3089\u3057\u3055")
     } else if(source == "hourly"){
       availability_table <-
         tibble::tribble(
           ~ element, ~ unit,    ~ from,                 ~ to,                                                         ~ clim_from,       ~ description,
-          "TMP",     "\u00b0C", ymd_h("1991-01-01 01", tz = "Asia/Tokyo"), ymd_h(paste(lubridate::today(tz = "Asia/Tokyo") + lubridate::days(10), "00")), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u6c17\u6e29",
-          "RH",      "%",       ymd_h("2008-01-01 01", tz = "Asia/Tokyo"), ymd_h(paste(lubridate::today(tz = "Asia/Tokyo") + lubridate::days(10), "00")), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u76f8\u5bfe\u6e7f\u5ea6",
-          "DLR",      "MJ m-2",       ymd_h("2008-01-01 01", tz = "Asia/Tokyo"), ymd_h(paste(lubridate::today(tz = "Asia/Tokyo") + lubridate::days(10), "00")), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u4e0b\u5411\u304d\u9577\u6ce2\u653e\u5c04\u91cf",
-          "APCPRA",      "mm",       ymd_h("2022-01-01 01", tz = "Asia/Tokyo"), ymd_h(paste(lubridate::today(tz = "Asia/Tokyo") + lubridate::days(10), "00")), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u964d\u6c34\u91cf",
-          "PREC",      "mm",       ymd_h("2022-01-01 01", tz = "Asia/Tokyo"), ymd_h(paste(lubridate::today(tz = "Asia/Tokyo") + lubridate::days(10), "00")), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u964d\u6c34\u91cf"
+          "TMP",     "\u00b0C", ymd_h("1991-01-01 01", tz = "Asia/Tokyo"), ymd_h(paste(lubridate::today(tz = "Asia/Tokyo") + lubridate::days(10), "00")), date_99991231, "\u6c17\u6e29",
+          "RH",      "%",       ymd_h("2008-01-01 01", tz = "Asia/Tokyo"), ymd_h(paste(lubridate::today(tz = "Asia/Tokyo") + lubridate::days(10), "00")), date_99991231, "\u76f8\u5bfe\u6e7f\u5ea6",
+          "DLR",      "MJ m-2",       ymd_h("2008-01-01 01", tz = "Asia/Tokyo"), ymd_h(paste(lubridate::today(tz = "Asia/Tokyo") + lubridate::days(10), "00")), date_99991231, "\u4e0b\u5411\u304d\u9577\u6ce2\u653e\u5c04\u91cf",
+          "APCPRA",      "mm",       ymd_h("2022-01-01 01", tz = "Asia/Tokyo"), ymd_h(paste(lubridate::today(tz = "Asia/Tokyo") + lubridate::days(10), "00")), date_99991231, "\u964d\u6c34\u91cf",
+          "PREC",      "mm",       ymd_h("2022-01-01 01", tz = "Asia/Tokyo"), ymd_h(paste(lubridate::today(tz = "Asia/Tokyo") + lubridate::days(10), "00")), date_99991231, "\u964d\u6c34\u91cf"
           )
     } else if(source == "geo"){
       availability_table <-
         tibble::tribble(
           ~ element,         ~ unit,    ~ from,            ~ to,              ~ description,
-          "altitude",        "\u00b0C", ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u5e73\u5747\u6a19\u9ad8",
-          "area",            "%",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u9762\u7a4d",
-          "landuse_H210100", "%",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u7530",
-          "landuse_H210200", "%",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u305d\u306e\u4ed6\u306e\u8fb2\u7528\u5730",
-          "landuse_H210500", "%",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u68ee\u6797",
-          "landuse_H210600", "%",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u8352\u5730",
-          "landuse_H210700", "%",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u5efa\u7269\u7528\u5730",
-          "landuse_H210901", "%",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u9053\u8def",
-          "landuse_H210902", "%",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u9244\u9053",
-          "landuse_H211000", "%",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u305d\u306e\u4ed6\u306e\u7528\u5730",
-          "landuse_H211100", "%",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u6cb3\u5ddd\u5730\u304a\u3088\u3073\u6e56\u6cbc",
-          "landuse_H211400", "%",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u6d77\u6d5c",
-          "landuse_H211500", "%",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u6d77\u6c34\u57df",
-          "landuse_H211600", "%",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u30b4\u30eb\u30d5\u5834",
-          "pref_all60",      "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u5168\u56fd\u4e00\u62ec\u90fd\u9053\u5e9c\u770c\u7bc4\u56f2\u56f3",
+          "altitude",        "\u00b0C", date_00010101, date_99991231, "\u5e73\u5747\u6a19\u9ad8",
+          "area",            "%",       date_00010101, date_99991231, "\u9762\u7a4d",
+          "landuse_H210100", "%",       date_00010101, date_99991231, "\u7530",
+          "landuse_H210200", "%",       date_00010101, date_99991231, "\u305d\u306e\u4ed6\u306e\u8fb2\u7528\u5730",
+          "landuse_H210500", "%",       date_00010101, date_99991231, "\u68ee\u6797",
+          "landuse_H210600", "%",       date_00010101, date_99991231, "\u8352\u5730",
+          "landuse_H210700", "%",       date_00010101, date_99991231, "\u5efa\u7269\u7528\u5730",
+          "landuse_H210901", "%",       date_00010101, date_99991231, "\u9053\u8def",
+          "landuse_H210902", "%",       date_00010101, date_99991231, "\u9244\u9053",
+          "landuse_H211000", "%",       date_00010101, date_99991231, "\u305d\u306e\u4ed6\u306e\u7528\u5730",
+          "landuse_H211100", "%",       date_00010101, date_99991231, "\u6cb3\u5ddd\u5730\u304a\u3088\u3073\u6e56\u6cbc",
+          "landuse_H211400", "%",       date_00010101, date_99991231, "\u6d77\u6d5c",
+          "landuse_H211500", "%",       date_00010101, date_99991231, "\u6d77\u6c34\u57df",
+          "landuse_H211600", "%",       date_00010101, date_99991231, "\u30b4\u30eb\u30d5\u5834",
+          "pref_all60",      "-",       date_00010101, date_99991231, "\u5168\u56fd\u4e00\u62ec\u90fd\u9053\u5e9c\u770c\u7bc4\u56f2\u56f3",
 
-          "pref_0100",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5317\u6d77\u9053",
-          "pref_0101",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5317\u6d77\u9053\u77f3\u72e9\u632f\u8208\u5c40",
-          "pref_0102",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5317\u6d77\u9053\u6e21\u5cf6\u7dcf\u5408\u632f\u8208\u5c40",
-          "pref_0103",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5317\u6d77\u9053\u6a9c\u5c71\u632f\u8208\u5c40",
-          "pref_0104",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5317\u6d77\u9053\u5f8c\u5fd7\u7dcf\u5408\u632f\u8208\u5c40",
-          "pref_0105",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5317\u6d77\u9053\u7a7a\u77e5\u7dcf\u5408\u632f\u8208\u5c40",
-          "pref_0106",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5317\u6d77\u9053\u4e0a\u5ddd\u7dcf\u5408\u632f\u8208\u5c40",
-          "pref_0107",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5317\u6d77\u9053\u7559\u840c\u632f\u8208\u5c40",
-          "pref_0108",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5317\u6d77\u9053\u5b97\u8c37\u7dcf\u5408\u632f\u8208\u5c40",
-          "pref_0109",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5317\u6d77\u9053\u30aa\u30db\u30fc\u30c4\u30af\u7dcf\u5408\u632f\u8208\u5c40",
-          "pref_0110",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5317\u6d77\u9053\u80c6\u632f\u7dcf\u5408\u632f\u8208\u5c40",
-          "pref_0111",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5317\u6d77\u9053\u65e5\u9ad8\u632f\u8208\u5c40",
-          "pref_0112",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5317\u6d77\u9053\u5341\u52dd\u7dcf\u5408\u632f\u8208\u5c40",
-          "pref_0113",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5317\u6d77\u9053\u91e7\u8def\u7dcf\u5408\u632f\u8208\u5c40",
-          "pref_0114",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5317\u6d77\u9053\u6839\u5ba4\u632f\u8208\u5c40",
-          "pref_0200",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u9752\u68ee\u770c",
-          "pref_0300",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5ca9\u624b\u770c",
-          "pref_0400",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5bae\u57ce\u770c",
-          "pref_0500",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u79cb\u7530\u770c",
-          "pref_0600",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5c71\u5f62\u770c",
-          "pref_0700",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u798f\u5cf6\u770c",
-          "pref_0800",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u8328\u57ce\u770c",
-          "pref_0900",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u6803\u6728\u770c",
-          "pref_1000",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u7fa4\u99ac\u770c",
-          "pref_1100",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u57fc\u7389\u770c",
-          "pref_1200",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5343\u8449\u770c",
-          "pref_1300",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u6771\u4eac\u90fd",
-          "pref_1400",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u795e\u5948\u5ddd\u770c",
-          "pref_1500",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u65b0\u6f5f\u770c",
-          "pref_1600",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5bcc\u5c71\u770c",
-          "pref_1700",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u77f3\u5ddd\u770c",
-          "pref_1800",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u798f\u4e95\u770c",
-          "pref_1900",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5c71\u68a8\u770c",
-          "pref_2000",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u9577\u91ce\u770c",
-          "pref_2100",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5c90\u961c\u770c",
-          "pref_2200",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u9759\u5ca1\u770c",
-          "pref_2300",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u611b\u77e5\u770c",
-          "pref_2400",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u4e09\u91cd\u770c",
-          "pref_2500",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u6ecb\u8cc0\u770c",
-          "pref_2600",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u4eac\u90fd\u5e9c",
-          "pref_2700",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5927\u962a\u5e9c",
-          "pref_2800",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5175\u5eab\u770c",
-          "pref_2900",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5948\u826f\u770c",
-          "pref_3000",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u548c\u6b4c\u5c71\u770c",
-          "pref_3100",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u9ce5\u53d6\u770c",
-          "pref_3200",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5cf6\u6839\u770c",
-          "pref_3300",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5ca1\u5c71\u770c",
-          "pref_3400",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5e83\u5cf6\u770c",
-          "pref_3500",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5c71\u53e3\u770c",
-          "pref_3600",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5fb3\u5cf6\u770c",
-          "pref_3700",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u9999\u5ddd\u770c",
-          "pref_3800",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u611b\u5a9b\u770c",
-          "pref_3900",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u9ad8\u77e5\u770c",
-          "pref_4000",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u798f\u5ca1\u770c",
-          "pref_4100",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u4f50\u8cc0\u770c",
-          "pref_4200",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u9577\u5d0e\u770c",
-          "pref_4300",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u718a\u672c\u770c",
-          "pref_4400",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5927\u5206\u770c",
-          "pref_4500",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5bae\u5d0e\u770c",
-          "pref_4600",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u9e7f\u5150\u5cf6\u770c",
-          "pref_4700",       "-",       ymd("0001-01-01", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u6c96\u7e04\u770c") %>%
+          "pref_0100",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5317\u6d77\u9053",
+          "pref_0101",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5317\u6d77\u9053\u77f3\u72e9\u632f\u8208\u5c40",
+          "pref_0102",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5317\u6d77\u9053\u6e21\u5cf6\u7dcf\u5408\u632f\u8208\u5c40",
+          "pref_0103",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5317\u6d77\u9053\u6a9c\u5c71\u632f\u8208\u5c40",
+          "pref_0104",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5317\u6d77\u9053\u5f8c\u5fd7\u7dcf\u5408\u632f\u8208\u5c40",
+          "pref_0105",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5317\u6d77\u9053\u7a7a\u77e5\u7dcf\u5408\u632f\u8208\u5c40",
+          "pref_0106",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5317\u6d77\u9053\u4e0a\u5ddd\u7dcf\u5408\u632f\u8208\u5c40",
+          "pref_0107",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5317\u6d77\u9053\u7559\u840c\u632f\u8208\u5c40",
+          "pref_0108",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5317\u6d77\u9053\u5b97\u8c37\u7dcf\u5408\u632f\u8208\u5c40",
+          "pref_0109",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5317\u6d77\u9053\u30aa\u30db\u30fc\u30c4\u30af\u7dcf\u5408\u632f\u8208\u5c40",
+          "pref_0110",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5317\u6d77\u9053\u80c6\u632f\u7dcf\u5408\u632f\u8208\u5c40",
+          "pref_0111",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5317\u6d77\u9053\u65e5\u9ad8\u632f\u8208\u5c40",
+          "pref_0112",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5317\u6d77\u9053\u5341\u52dd\u7dcf\u5408\u632f\u8208\u5c40",
+          "pref_0113",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5317\u6d77\u9053\u91e7\u8def\u7dcf\u5408\u632f\u8208\u5c40",
+          "pref_0114",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5317\u6d77\u9053\u6839\u5ba4\u632f\u8208\u5c40",
+          "pref_0200",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u9752\u68ee\u770c",
+          "pref_0300",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5ca9\u624b\u770c",
+          "pref_0400",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5bae\u57ce\u770c",
+          "pref_0500",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u79cb\u7530\u770c",
+          "pref_0600",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5c71\u5f62\u770c",
+          "pref_0700",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u798f\u5cf6\u770c",
+          "pref_0800",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u8328\u57ce\u770c",
+          "pref_0900",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u6803\u6728\u770c",
+          "pref_1000",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u7fa4\u99ac\u770c",
+          "pref_1100",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u57fc\u7389\u770c",
+          "pref_1200",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5343\u8449\u770c",
+          "pref_1300",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u6771\u4eac\u90fd",
+          "pref_1400",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u795e\u5948\u5ddd\u770c",
+          "pref_1500",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u65b0\u6f5f\u770c",
+          "pref_1600",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5bcc\u5c71\u770c",
+          "pref_1700",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u77f3\u5ddd\u770c",
+          "pref_1800",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u798f\u4e95\u770c",
+          "pref_1900",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5c71\u68a8\u770c",
+          "pref_2000",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u9577\u91ce\u770c",
+          "pref_2100",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5c90\u961c\u770c",
+          "pref_2200",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u9759\u5ca1\u770c",
+          "pref_2300",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u611b\u77e5\u770c",
+          "pref_2400",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u4e09\u91cd\u770c",
+          "pref_2500",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u6ecb\u8cc0\u770c",
+          "pref_2600",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u4eac\u90fd\u5e9c",
+          "pref_2700",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5927\u962a\u5e9c",
+          "pref_2800",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5175\u5eab\u770c",
+          "pref_2900",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5948\u826f\u770c",
+          "pref_3000",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u548c\u6b4c\u5c71\u770c",
+          "pref_3100",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u9ce5\u53d6\u770c",
+          "pref_3200",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5cf6\u6839\u770c",
+          "pref_3300",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5ca1\u5c71\u770c",
+          "pref_3400",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5e83\u5cf6\u770c",
+          "pref_3500",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5c71\u53e3\u770c",
+          "pref_3600",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5fb3\u5cf6\u770c",
+          "pref_3700",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u9999\u5ddd\u770c",
+          "pref_3800",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u611b\u5a9b\u770c",
+          "pref_3900",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u9ad8\u77e5\u770c",
+          "pref_4000",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u798f\u5ca1\u770c",
+          "pref_4100",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u4f50\u8cc0\u770c",
+          "pref_4200",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u9577\u5d0e\u770c",
+          "pref_4300",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u718a\u672c\u770c",
+          "pref_4400",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5927\u5206\u770c",
+          "pref_4500",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5bae\u5d0e\u770c",
+          "pref_4600",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u9e7f\u5150\u5cf6\u770c",
+          "pref_4700",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u6c96\u7e04\u770c") %>%
           dplyr::mutate(clim_from = .data$from)
     } else if(source == "scenario"){
       availability_table <-
         tibble::tribble(
           ~ element, ~ unit,    ~ from,            ~ to,              ~ clim_from, ~ description,
-          "TMP_mea", "\u00b0C", ymd("1981-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u65e5\u5e73\u5747\u6c17\u6e29",
-          "TMP_max", "\u00b0C", ymd("1981-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u65e5\u6700\u9ad8\u6c17\u6e29",
-          "TMP_min", "\u00b0C", ymd("1981-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u65e5\u6700\u4f4e\u6c17\u6e29",
-          "APCP",    "mm d-1",  ymd("1981-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u964d\u6c34\u91cf",
-          "GSR",     "MJ m-2",  ymd("1981-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u5168\u5929\u65e5\u5c04\u91cf",
-          "RH",      "%",       ymd("1981-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u65e5\u5e73\u5747\u76f8\u5bfe\u6e7f\u5ea6",
-          "WIND",    "m s-1",   ymd("1981-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"), ymd("9999-12-31", tz = "Asia/Tokyo"), "\u65e5\u5e73\u5747\u98a8\u901f")
+          "TMP_mea", "\u00b0C", date_20110101, date_21001231, date_99991231, "\u65e5\u5e73\u5747\u6c17\u6e29",
+          "TMP_max", "\u00b0C", date_20110101, date_21001231, date_99991231, "\u65e5\u6700\u9ad8\u6c17\u6e29",
+          "TMP_min", "\u00b0C", date_20110101, date_21001231, date_99991231, "\u65e5\u6700\u4f4e\u6c17\u6e29",
+          "APCP",    "mm d-1",  date_20110101, date_21001231, date_99991231, "\u964d\u6c34\u91cf",
+          "GSR",     "MJ m-2",  date_20110101, date_21001231, date_99991231, "\u5168\u5929\u65e5\u5c04\u91cf",
+          "RH",      "%",       date_20110101, date_21001231, date_99991231, "\u65e5\u5e73\u5747\u76f8\u5bfe\u6e7f\u5ea6",
+          "WIND",    "m s-1",   date_20110101, date_21001231, date_99991231, "\u65e5\u5e73\u5747\u98a8\u901f")
     } else {
       stop('`source`\u306b\u306f "daily" \u3001 "hourly" \u3001 "geo" \u3001 "scenario" \u306e\u3044\u305a\u308c\u304b\u3092\u6307\u5b9a\u3057\u3066\u304f\u3060\u3055\u3044\u3002')
       # usethis::ui_stop('argument `source` must be either "daily", "hourly", "scenario", or "geo".')
@@ -217,118 +228,124 @@ check_source_availability <-
 check_scenario_availability <-
   function(.times, .element, .model, .RCP){
 
+    date_19810101 <- ymd("1981-01-01", tz = "Asia/Tokyo")
+    date_20041231 <- ymd("2004-12-31", tz = "Asia/Tokyo")
+    date_20051231 <- ymd("2005-12-31", tz = "Asia/Tokyo")
+    date_20110101 <- ymd("2011-01-01", tz = "Asia/Tokyo")
+    date_20060101 <- ymd("2006-01-01", tz = "Asia/Tokyo")
+
     availability_table <-
       tibble::tribble(
         ~ model,     ~ RCP,        ~ element, ~ from,            ~ to,
-        "MRI-CGCM3", "historical", "TMP_mea", ymd("1981-01-01", tz = "Asia/Tokyo"), ymd("2005-12-31", tz = "Asia/Tokyo"),
-        "MRI-CGCM3", "historical", "TMP_max", ymd("1981-01-01", tz = "Asia/Tokyo"), ymd("2005-12-31", tz = "Asia/Tokyo"),
-        "MRI-CGCM3", "historical", "TMP_min", ymd("1981-01-01", tz = "Asia/Tokyo"), ymd("2005-12-31", tz = "Asia/Tokyo"),
-        "MRI-CGCM3", "historical", "APCP",    ymd("1981-01-01", tz = "Asia/Tokyo"), ymd("2005-12-31", tz = "Asia/Tokyo"),
-        "MRI-CGCM3", "historical", "GSR",     ymd("1981-01-01", tz = "Asia/Tokyo"), ymd("2005-12-31", tz = "Asia/Tokyo"),
-        "MRI-CGCM3", "historical", "RH",      ymd("1981-01-01", tz = "Asia/Tokyo"), ymd("2005-12-31", tz = "Asia/Tokyo"),
-        "MRI-CGCM3", "historical", "WIND",    ymd("1981-01-01", tz = "Asia/Tokyo"), ymd("2005-12-31", tz = "Asia/Tokyo"),
-        "MRI-CGCM3", "RCP2.6",     "TMP_mea", ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "MRI-CGCM3", "RCP2.6",     "TMP_max", ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "MRI-CGCM3", "RCP2.6",     "TMP_min", ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "MRI-CGCM3", "RCP2.6",     "APCP",    ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "MRI-CGCM3", "RCP2.6",     "GSR",     ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "MRI-CGCM3", "RCP2.6",     "RH",      ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "MRI-CGCM3", "RCP2.6",     "WIND",    ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "MRI-CGCM3", "RCP8.5",     "TMP_mea", ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "MRI-CGCM3", "RCP8.5",     "TMP_max", ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "MRI-CGCM3", "RCP8.5",     "TMP_min", ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "MRI-CGCM3", "RCP8.5",     "APCP",    ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "MRI-CGCM3", "RCP8.5",     "GSR",     ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "MRI-CGCM3", "RCP8.5",     "RH",      ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "MRI-CGCM3", "RCP8.5",     "WIND",    ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
+        "MRI-CGCM3", "historical", "TMP_mea", date_19810101, date_20051231,
+        "MRI-CGCM3", "historical", "TMP_max", date_19810101, date_20051231,
+        "MRI-CGCM3", "historical", "TMP_min", date_19810101, date_20051231,
+        "MRI-CGCM3", "historical", "APCP",    date_19810101, date_20051231,
+        "MRI-CGCM3", "historical", "GSR",     date_19810101, date_20051231,
+        "MRI-CGCM3", "historical", "RH",      date_19810101, date_20051231,
+        "MRI-CGCM3", "historical", "WIND",    date_19810101, date_20051231,
+        "MRI-CGCM3", "RCP2.6",     "TMP_mea", date_20060101, date_21001231,
+        "MRI-CGCM3", "RCP2.6",     "TMP_max", date_20060101, date_21001231,
+        "MRI-CGCM3", "RCP2.6",     "TMP_min", date_20060101, date_21001231,
+        "MRI-CGCM3", "RCP2.6",     "APCP",    date_20060101, date_21001231,
+        "MRI-CGCM3", "RCP2.6",     "GSR",     date_20060101, date_21001231,
+        "MRI-CGCM3", "RCP2.6",     "RH",      date_20060101, date_21001231,
+        "MRI-CGCM3", "RCP2.6",     "WIND",    date_20060101, date_21001231,
+        "MRI-CGCM3", "RCP8.5",     "TMP_mea", date_20060101, date_21001231,
+        "MRI-CGCM3", "RCP8.5",     "TMP_max", date_20060101, date_21001231,
+        "MRI-CGCM3", "RCP8.5",     "TMP_min", date_20060101, date_21001231,
+        "MRI-CGCM3", "RCP8.5",     "APCP",    date_20060101, date_21001231,
+        "MRI-CGCM3", "RCP8.5",     "GSR",     date_20060101, date_21001231,
+        "MRI-CGCM3", "RCP8.5",     "RH",      date_20060101, date_21001231,
+        "MRI-CGCM3", "RCP8.5",     "WIND",    date_20060101, date_21001231,
 
-        "MIROC5", "historical", "TMP_mea", ymd("1981-01-01", tz = "Asia/Tokyo"), ymd("2005-12-31", tz = "Asia/Tokyo"),
-        "MIROC5", "historical", "TMP_max", ymd("1981-01-01", tz = "Asia/Tokyo"), ymd("2005-12-31", tz = "Asia/Tokyo"),
-        "MIROC5", "historical", "TMP_min", ymd("1981-01-01", tz = "Asia/Tokyo"), ymd("2005-12-31", tz = "Asia/Tokyo"),
-        "MIROC5", "historical", "APCP",    ymd("1981-01-01", tz = "Asia/Tokyo"), ymd("2005-12-31", tz = "Asia/Tokyo"),
-        "MIROC5", "historical", "GSR",     ymd("1981-01-01", tz = "Asia/Tokyo"), ymd("2005-12-31", tz = "Asia/Tokyo"),
-        "MIROC5", "historical", "RH",      ymd("1981-01-01", tz = "Asia/Tokyo"), ymd("2005-12-31", tz = "Asia/Tokyo"),
-        "MIROC5", "historical", "WIND",    ymd("1981-01-01", tz = "Asia/Tokyo"), ymd("2005-12-31", tz = "Asia/Tokyo"),
-        "MIROC5", "RCP2.6",     "TMP_mea", ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "MIROC5", "RCP2.6",     "TMP_max", ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "MIROC5", "RCP2.6",     "TMP_min", ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "MIROC5", "RCP2.6",     "APCP",    ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "MIROC5", "RCP2.6",     "GSR",     ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "MIROC5", "RCP2.6",     "RH",      ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "MIROC5", "RCP2.6",     "WIND",    ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "MIROC5", "RCP8.5",     "TMP_mea", ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "MIROC5", "RCP8.5",     "TMP_max", ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "MIROC5", "RCP8.5",     "TMP_min", ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "MIROC5", "RCP8.5",     "APCP",    ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "MIROC5", "RCP8.5",     "GSR",     ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "MIROC5", "RCP8.5",     "RH",      ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "MIROC5", "RCP8.5",     "WIND",    ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
+        "MIROC5", "historical", "TMP_mea", date_19810101, date_20051231,
+        "MIROC5", "historical", "TMP_max", date_19810101, date_20051231,
+        "MIROC5", "historical", "TMP_min", date_19810101, date_20051231,
+        "MIROC5", "historical", "APCP",    date_19810101, date_20051231,
+        "MIROC5", "historical", "GSR",     date_19810101, date_20051231,
+        "MIROC5", "historical", "RH",      date_19810101, date_20051231,
+        "MIROC5", "historical", "WIND",    date_19810101, date_20051231,
+        "MIROC5", "RCP2.6",     "TMP_mea", date_20060101, date_21001231,
+        "MIROC5", "RCP2.6",     "TMP_max", date_20060101, date_21001231,
+        "MIROC5", "RCP2.6",     "TMP_min", date_20060101, date_21001231,
+        "MIROC5", "RCP2.6",     "APCP",    date_20060101, date_21001231,
+        "MIROC5", "RCP2.6",     "GSR",     date_20060101, date_21001231,
+        "MIROC5", "RCP2.6",     "RH",      date_20060101, date_21001231,
+        "MIROC5", "RCP2.6",     "WIND",    date_20060101, date_21001231,
+        "MIROC5", "RCP8.5",     "TMP_mea", date_20060101, date_21001231,
+        "MIROC5", "RCP8.5",     "TMP_max", date_20060101, date_21001231,
+        "MIROC5", "RCP8.5",     "TMP_min", date_20060101, date_21001231,
+        "MIROC5", "RCP8.5",     "APCP",    date_20060101, date_21001231,
+        "MIROC5", "RCP8.5",     "GSR",     date_20060101, date_21001231,
+        "MIROC5", "RCP8.5",     "RH",      date_20060101, date_21001231,
+        "MIROC5", "RCP8.5",     "WIND",    date_20060101, date_21001231,
 
-        "CSIRO-Mk3-6-0", "historical", "TMP_mea", ymd("1981-01-01", tz = "Asia/Tokyo"), ymd("2005-12-31", tz = "Asia/Tokyo"),
-        "CSIRO-Mk3-6-0", "historical", "TMP_max", ymd("1981-01-01", tz = "Asia/Tokyo"), ymd("2005-12-31", tz = "Asia/Tokyo"),
-        "CSIRO-Mk3-6-0", "historical", "TMP_min", ymd("1981-01-01", tz = "Asia/Tokyo"), ymd("2005-12-31", tz = "Asia/Tokyo"),
-        "CSIRO-Mk3-6-0", "historical", "APCP",    ymd("1981-01-01", tz = "Asia/Tokyo"), ymd("2005-12-31", tz = "Asia/Tokyo"),
-        "CSIRO-Mk3-6-0", "historical", "GSR",     ymd("1981-01-01", tz = "Asia/Tokyo"), ymd("2005-12-31", tz = "Asia/Tokyo"),
-        "CSIRO-Mk3-6-0", "historical", "RH",      ymd("1981-01-01", tz = "Asia/Tokyo"), ymd("2005-12-31", tz = "Asia/Tokyo"),
-        "CSIRO-Mk3-6-0", "historical", "WIND",    ymd("1981-01-01", tz = "Asia/Tokyo"), ymd("2005-12-31", tz = "Asia/Tokyo"),
-        "CSIRO-Mk3-6-0", "RCP2.6",     "TMP_mea", ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "CSIRO-Mk3-6-0", "RCP2.6",     "TMP_max", ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "CSIRO-Mk3-6-0", "RCP2.6",     "TMP_min", ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "CSIRO-Mk3-6-0", "RCP2.6",     "APCP",    ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "CSIRO-Mk3-6-0", "RCP2.6",     "GSR",     ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "CSIRO-Mk3-6-0", "RCP2.6",     "RH",      ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "CSIRO-Mk3-6-0", "RCP2.6",     "WIND",    ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "CSIRO-Mk3-6-0", "RCP8.5",     "TMP_mea", ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "CSIRO-Mk3-6-0", "RCP8.5",     "TMP_max", ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "CSIRO-Mk3-6-0", "RCP8.5",     "TMP_min", ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "CSIRO-Mk3-6-0", "RCP8.5",     "APCP",    ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "CSIRO-Mk3-6-0", "RCP8.5",     "GSR",     ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "CSIRO-Mk3-6-0", "RCP8.5",     "RH",      ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "CSIRO-Mk3-6-0", "RCP8.5",     "WIND",    ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
+        "CSIRO-Mk3-6-0", "historical", "TMP_mea", date_19810101, date_20051231,
+        "CSIRO-Mk3-6-0", "historical", "TMP_max", date_19810101, date_20051231,
+        "CSIRO-Mk3-6-0", "historical", "TMP_min", date_19810101, date_20051231,
+        "CSIRO-Mk3-6-0", "historical", "APCP",    date_19810101, date_20051231,
+        "CSIRO-Mk3-6-0", "historical", "GSR",     date_19810101, date_20051231,
+        "CSIRO-Mk3-6-0", "historical", "RH",      date_19810101, date_20051231,
+        "CSIRO-Mk3-6-0", "historical", "WIND",    date_19810101, date_20051231,
+        "CSIRO-Mk3-6-0", "RCP2.6",     "TMP_mea", date_20060101, date_21001231,
+        "CSIRO-Mk3-6-0", "RCP2.6",     "TMP_max", date_20060101, date_21001231,
+        "CSIRO-Mk3-6-0", "RCP2.6",     "TMP_min", date_20060101, date_21001231,
+        "CSIRO-Mk3-6-0", "RCP2.6",     "APCP",    date_20060101, date_21001231,
+        "CSIRO-Mk3-6-0", "RCP2.6",     "GSR",     date_20060101, date_21001231,
+        "CSIRO-Mk3-6-0", "RCP2.6",     "RH",      date_20060101, date_21001231,
+        "CSIRO-Mk3-6-0", "RCP2.6",     "WIND",    date_20060101, date_21001231,
+        "CSIRO-Mk3-6-0", "RCP8.5",     "TMP_mea", date_20060101, date_21001231,
+        "CSIRO-Mk3-6-0", "RCP8.5",     "TMP_max", date_20060101, date_21001231,
+        "CSIRO-Mk3-6-0", "RCP8.5",     "TMP_min", date_20060101, date_21001231,
+        "CSIRO-Mk3-6-0", "RCP8.5",     "APCP",    date_20060101, date_21001231,
+        "CSIRO-Mk3-6-0", "RCP8.5",     "GSR",     date_20060101, date_21001231,
+        "CSIRO-Mk3-6-0", "RCP8.5",     "RH",      date_20060101, date_21001231,
+        "CSIRO-Mk3-6-0", "RCP8.5",     "WIND",    date_20060101, date_21001231,
 
-        "GFDL-CM3", "historical", "TMP_mea", ymd("1981-01-01", tz = "Asia/Tokyo"), ymd("2004-12-31", tz = "Asia/Tokyo"),  # 2005 not available
-        "GFDL-CM3", "historical", "TMP_max", ymd("1981-01-01", tz = "Asia/Tokyo"), ymd("2004-12-31", tz = "Asia/Tokyo"),  # 2005 not available
-        "GFDL-CM3", "historical", "TMP_min", ymd("1981-01-01", tz = "Asia/Tokyo"), ymd("2004-12-31", tz = "Asia/Tokyo"),  # 2005 not available
-        "GFDL-CM3", "historical", "APCP",    ymd("1981-01-01", tz = "Asia/Tokyo"), ymd("2004-12-31", tz = "Asia/Tokyo"),  # 2005 not available
-        "GFDL-CM3", "historical", "GSR",     ymd("1981-01-01", tz = "Asia/Tokyo"), ymd("2004-12-31", tz = "Asia/Tokyo"),  # 2005 not available
-        "GFDL-CM3", "historical", "RH",      ymd("1981-01-01", tz = "Asia/Tokyo"), ymd("2004-12-31", tz = "Asia/Tokyo"),  # 2005 not available
-        "GFDL-CM3", "historical", "WIND",    ymd("1981-01-01", tz = "Asia/Tokyo"), ymd("2004-12-31", tz = "Asia/Tokyo"),  # 2005 not available
-        "GFDL-CM3", "RCP2.6",     "TMP_mea", ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "GFDL-CM3", "RCP2.6",     "TMP_max", ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "GFDL-CM3", "RCP2.6",     "TMP_min", ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "GFDL-CM3", "RCP2.6",     "APCP",    ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "GFDL-CM3", "RCP2.6",     "GSR",     ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "GFDL-CM3", "RCP2.6",     "RH",      ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "GFDL-CM3", "RCP2.6",     "WIND",    ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "GFDL-CM3", "RCP8.5",     "TMP_mea", ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "GFDL-CM3", "RCP8.5",     "TMP_max", ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "GFDL-CM3", "RCP8.5",     "TMP_min", ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "GFDL-CM3", "RCP8.5",     "APCP",    ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "GFDL-CM3", "RCP8.5",     "GSR",     ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "GFDL-CM3", "RCP8.5",     "RH",      ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "GFDL-CM3", "RCP8.5",     "WIND",    ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
+        "GFDL-CM3", "historical", "TMP_mea", date_19810101, date_20041231,  # 2005 not available
+        "GFDL-CM3", "historical", "TMP_max", date_19810101, date_20041231,  # 2005 not available
+        "GFDL-CM3", "historical", "TMP_min", date_19810101, date_20041231,  # 2005 not available
+        "GFDL-CM3", "historical", "APCP",    date_19810101, date_20041231,  # 2005 not available
+        "GFDL-CM3", "historical", "GSR",     date_19810101, date_20041231,  # 2005 not available
+        "GFDL-CM3", "historical", "RH",      date_19810101, date_20041231,  # 2005 not available
+        "GFDL-CM3", "historical", "WIND",    date_19810101, date_20041231,  # 2005 not available
+        "GFDL-CM3", "RCP2.6",     "TMP_mea", date_20060101, date_21001231,
+        "GFDL-CM3", "RCP2.6",     "TMP_max", date_20060101, date_21001231,
+        "GFDL-CM3", "RCP2.6",     "TMP_min", date_20060101, date_21001231,
+        "GFDL-CM3", "RCP2.6",     "APCP",    date_20060101, date_21001231,
+        "GFDL-CM3", "RCP2.6",     "GSR",     date_20060101, date_21001231,
+        "GFDL-CM3", "RCP2.6",     "RH",      date_20060101, date_21001231,
+        "GFDL-CM3", "RCP2.6",     "WIND",    date_20060101, date_21001231,
+        "GFDL-CM3", "RCP8.5",     "TMP_mea", date_20060101, date_21001231,
+        "GFDL-CM3", "RCP8.5",     "TMP_max", date_20060101, date_21001231,
+        "GFDL-CM3", "RCP8.5",     "TMP_min", date_20060101, date_21001231,
+        "GFDL-CM3", "RCP8.5",     "APCP",    date_20060101, date_21001231,
+        "GFDL-CM3", "RCP8.5",     "GSR",     date_20060101, date_21001231,
+        "GFDL-CM3", "RCP8.5",     "RH",      date_20060101, date_21001231,
+        "GFDL-CM3", "RCP8.5",     "WIND",    date_20060101, date_21001231,
 
-        "HadGEM2-ES", "historical", "TMP_mea", ymd("1981-01-01", tz = "Asia/Tokyo"), ymd("2005-12-31", tz = "Asia/Tokyo"),
-        "HadGEM2-ES", "historical", "TMP_max", ymd("1981-01-01", tz = "Asia/Tokyo"), ymd("2005-12-31", tz = "Asia/Tokyo"),
-        "HadGEM2-ES", "historical", "TMP_min", ymd("1981-01-01", tz = "Asia/Tokyo"), ymd("2005-12-31", tz = "Asia/Tokyo"),
-        "HadGEM2-ES", "historical", "APCP",    ymd("1981-01-01", tz = "Asia/Tokyo"), ymd("2005-12-31", tz = "Asia/Tokyo"),
-        "HadGEM2-ES", "historical", "GSR",     ymd("1981-01-01", tz = "Asia/Tokyo"), ymd("2005-12-31", tz = "Asia/Tokyo"),
-        "HadGEM2-ES", "historical", "RH",      ymd("1981-01-01", tz = "Asia/Tokyo"), ymd("2005-12-31", tz = "Asia/Tokyo"),
-        "HadGEM2-ES", "historical", "WIND",    ymd("1981-01-01", tz = "Asia/Tokyo"), ymd("2005-12-31", tz = "Asia/Tokyo"),
-        "HadGEM2-ES", "RCP2.6",     "TMP_mea", ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "HadGEM2-ES", "RCP2.6",     "TMP_max", ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "HadGEM2-ES", "RCP2.6",     "TMP_min", ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "HadGEM2-ES", "RCP2.6",     "APCP",    ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2099-12-31", tz = "Asia/Tokyo"), # 2100 not available
-        "HadGEM2-ES", "RCP2.6",     "GSR",     ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2098-12-31", tz = "Asia/Tokyo"), # 2099, 2100 not available
-        "HadGEM2-ES", "RCP2.6",     "RH",      ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2099-12-31", tz = "Asia/Tokyo"), # 2100 not available
-        "HadGEM2-ES", "RCP2.6",     "WIND",    ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2100-12-31", tz = "Asia/Tokyo"),
-        "HadGEM2-ES", "RCP8.5",     "TMP_mea", ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2099-12-31", tz = "Asia/Tokyo"), # 2100 not available
-        "HadGEM2-ES", "RCP8.5",     "TMP_max", ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2099-12-31", tz = "Asia/Tokyo"), # 2100 not available
-        "HadGEM2-ES", "RCP8.5",     "TMP_min", ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2099-12-31", tz = "Asia/Tokyo"), # 2100 not available
-        "HadGEM2-ES", "RCP8.5",     "APCP",    ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2099-12-31", tz = "Asia/Tokyo"), # 2100 not available
-        "HadGEM2-ES", "RCP8.5",     "GSR",     ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2099-12-31", tz = "Asia/Tokyo"), # 2100 not available
-        "HadGEM2-ES", "RCP8.5",     "RH",      ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2099-12-31", tz = "Asia/Tokyo"), # 2100 not available
-        "HadGEM2-ES", "RCP8.5",     "WIND",    ymd("2006-01-01", tz = "Asia/Tokyo"), ymd("2099-12-31", tz = "Asia/Tokyo")  # 2100 not available
+        "HadGEM2-ES", "historical", "TMP_mea", date_19810101, date_20051231,
+        "HadGEM2-ES", "historical", "TMP_max", date_19810101, date_20051231,
+        "HadGEM2-ES", "historical", "TMP_min", date_19810101, date_20051231,
+        "HadGEM2-ES", "historical", "APCP",    date_19810101, date_20051231,
+        "HadGEM2-ES", "historical", "GSR",     date_19810101, date_20051231,
+        "HadGEM2-ES", "historical", "RH",      date_19810101, date_20051231,
+        "HadGEM2-ES", "historical", "WIND",    date_19810101, date_20051231,
+        "HadGEM2-ES", "RCP2.6",     "TMP_mea", date_20060101, date_21001231,
+        "HadGEM2-ES", "RCP2.6",     "TMP_max", date_20060101, date_21001231,
+        "HadGEM2-ES", "RCP2.6",     "TMP_min", date_20060101, date_21001231,
+        "HadGEM2-ES", "RCP2.6",     "APCP",    date_20060101, ymd("2099-12-31", tz = "Asia/Tokyo"), # 2100 not available
+        "HadGEM2-ES", "RCP2.6",     "GSR",     date_20060101, ymd("2098-12-31", tz = "Asia/Tokyo"), # 2099, 2100 not available
+        "HadGEM2-ES", "RCP2.6",     "RH",      date_20060101, ymd("2099-12-31", tz = "Asia/Tokyo"), # 2100 not available
+        "HadGEM2-ES", "RCP2.6",     "WIND",    date_20060101, date_21001231,
+        "HadGEM2-ES", "RCP8.5",     "TMP_mea", date_20060101, ymd("2099-12-31", tz = "Asia/Tokyo"), # 2100 not available
+        "HadGEM2-ES", "RCP8.5",     "TMP_max", date_20060101, ymd("2099-12-31", tz = "Asia/Tokyo"), # 2100 not available
+        "HadGEM2-ES", "RCP8.5",     "TMP_min", date_20060101, ymd("2099-12-31", tz = "Asia/Tokyo"), # 2100 not available
+        "HadGEM2-ES", "RCP8.5",     "APCP",    date_20060101, ymd("2099-12-31", tz = "Asia/Tokyo"), # 2100 not available
+        "HadGEM2-ES", "RCP8.5",     "GSR",     date_20060101, ymd("2099-12-31", tz = "Asia/Tokyo"), # 2100 not available
+        "HadGEM2-ES", "RCP8.5",     "RH",      date_20060101, ymd("2099-12-31", tz = "Asia/Tokyo"), # 2100 not available
+        "HadGEM2-ES", "RCP8.5",     "WIND",    date_20060101, ymd("2099-12-31", tz = "Asia/Tokyo")  # 2100 not available
       )
 
     check_element <-
