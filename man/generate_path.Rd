@@ -12,7 +12,8 @@ generate_path(
   source = "daily",
   model = NULL,
   RCP = NULL,
-  is_clim = FALSE
+  is_clim = FALSE,
+  .ver = "AMD"
 )
 }
 \arguments{
@@ -31,6 +32,8 @@ generate_path(
 \item{RCP}{Representative Concentration Pathways for scenario data}
 
 \item{is_clim}{return climatological normals if \code{TRUE}}
+
+\item{.ver}{AMD system version (experimental)}
 }
 \description{
 Generate relative paths to NetCDF files in AMGSDS Server and local directory.

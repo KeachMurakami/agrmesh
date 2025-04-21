@@ -16,7 +16,7 @@ download_netcdf(
 
 \item{outdir}{local directory to store downloaded files}
 
-\item{server}{URL for OPeNDAP server}
+\item{server}{URL for OPeNDAP server (experimental)}
 
 \item{.silent}{suppress download messages if \code{TRUE}}
 }

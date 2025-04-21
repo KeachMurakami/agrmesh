@@ -16,6 +16,7 @@ load_amgsds(
   RCP = "RCP8.5",
   is_clim = FALSE,
   server = "amd.rd.naro.go.jp/opendap",
+  .ver = "AMD",
   .silent = TRUE,
   localdir,
   autodownload = FALSE
@@ -42,7 +43,9 @@ load_amgsds(
 
 \item{is_clim}{logical. return climatological normals if \code{TRUE}}
 
-\item{server}{URL for OPeNDAP server}
+\item{server}{URL for OPeNDAP server (experimental)}
+
+\item{.ver}{AMD system version (experimental)}
 
 \item{.silent}{logical. suppress download message if \code{TRUE}}
 
