@@ -1,7 +1,7 @@
 Package: agrmesh
 Type: Package
 Title: R Interface for AMGSDS
-Version: 0.0.1.0008
+Version: 0.0.1.0009
 Authors@R: c(
     person("Keach", "Murakami", role = c("aut", "cre"), email = "keach.murakami@gmail.com", comment = c(ORCID = "0000-0001-8150-9535")),
     person("Yuichi", "Nagasaki", role = c("ctb"))

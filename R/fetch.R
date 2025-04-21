@@ -472,7 +472,7 @@ fetch_amgsds <-
           purrr::map(lubridate::date)
 
         result <-
-          purrr::map(timesplits, ~ fetch_amgsds(., lats, lons, elements, mode, source, output, model, RCP, is_clim, server, .silent))
+          purrr::map(timesplits, ~ fetch_amgsds(., lats, lons, elements, mode, source, output, model, RCP, is_clim, server, .ver, .silent))
 
         if(output == "tibble"){
           result <-
@@ -482,7 +482,7 @@ fetch_amgsds <-
 
     } else {
       result <-
-        purrr::map(elements,  ~ fetch_amgsds(times, lats, lons, ., mode, source, output, model, RCP, is_clim, server, .silent))
+        purrr::map(elements,  ~ fetch_amgsds(times, lats, lons, ., mode, source, output, model, RCP, is_clim, server, .ver, .silent))
       if(output == "tibble"){
         common_names <-
           purrr::map(result, names) %>%
