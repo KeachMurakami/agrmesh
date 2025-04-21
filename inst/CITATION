@@ -4,6 +4,6 @@ citEntry(entry="misc",
   author = "Keach Murakami and Yuichi Nagasaki",
   title = "{agrmesh: R interface for the Agro-Meteorological Grid Square Data}",
   year = 2023,
-  url = "https://doi.org/10.32614/RJ-2018-009",
+  url = "https://github.com/KeachMurakami/agrmesh",
   textVersion = "Murakami K, Nagasaki Y, 2023. agrmesh: R interface for the Agro-Meteorological Grid Square Data"
 )
