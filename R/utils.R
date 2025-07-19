@@ -233,6 +233,7 @@ check_scenario_availability <-
     date_20051231 <- ymd("2005-12-31", tz = "Asia/Tokyo")
     date_20110101 <- ymd("2011-01-01", tz = "Asia/Tokyo")
     date_20060101 <- ymd("2006-01-01", tz = "Asia/Tokyo")
+    date_21001231 <- ymd("2100-12-31", tz = "Asia/Tokyo")
 
     availability_table <-
       tibble::tribble(
