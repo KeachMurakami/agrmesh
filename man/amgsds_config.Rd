@@ -7,7 +7,7 @@
 amgsds_config(
   userid = Sys.getenv("amgsds_id"),
   password = Sys.getenv("amgsds_pw"),
-  server = "amd.rd.naro.go.jp/opendap",
+  server = "https://amd.rd.naro.go.jp/opendap",
   .force = FALSE
 )
 }
