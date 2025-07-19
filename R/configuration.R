@@ -8,8 +8,8 @@
 #' @param server URL for OPeNDAP server
 #' @param .force logical. pass verification for offline .onLoad
 amgsds_config <-
-  function(userid = Sys.getenv("amgsds_id"), password = Sys.getenv("amgsds_pw"), server = "amd.rd.naro.go.jp/opendap", .force = FALSE){
-
+  function(userid = Sys.getenv("amgsds_id"), password = Sys.getenv("amgsds_pw"), server = "https://amd.rd.naro.go.jp/opendap", .force = FALSE){
+    status_url <- stringr::str_glue("{server}/status/status")
     is_network_available <- TRUE
 
     # save user id and password in R_environ
@@ -21,7 +21,7 @@ amgsds_config <-
 
     # verify network connection
     tryCatch({
-      connect <- readr::read_lines("https://www.google.com")
+      connect <- curl::curl_fetch_memory(url = "http://clients3.google.com/generate_204")
     },
     error = function(e){
       is_network_available <<- FALSE
@@ -35,13 +35,23 @@ amgsds_config <-
     if(is_network_available){
       # verify id/pw
       tryCatch({
-        connect <- readr::read_lines(stringr::str_glue("https://{userid}:{password}@{server}/AMD/"))
-        usethis::ui_done("USERID and PASSWORD -> verified\n")
+        handle <- curl::new_handle()
+        curl::handle_setopt(handle, userpwd = stringr::str_glue('{userid}:{password}'))
+        curl::handle_setopt(handle, sslversion = 6)
+        curl::handle_setopt(handle, useragent = 'curl/7.50.1')
+        curl::handle_setopt(handle, httpheader = c('Accept' = '*/*'))
+
+        connect <- curl::curl_fetch_memory(url = status_url, handle = handle)
+        if(connect$status_code == 200){
+          usethis::ui_done("USERID and PASSWORD -> verified\n")
+        } else {
+          usethis::ui_oops(c("Incorrect USERID and/or PASSWORD/", "Use correct `amgsds_id` and `amgsds_pw`."))
+          usethis::edit_r_environ()
+          invisible(TRUE)
+        }
       },
       error = function(e){
-        usethis::ui_oops(c("Incorrect USERID and/or PASSWORD/", "Use correct `amgsds_id` and `amgsds_pw`."))
-        usethis::edit_r_environ()
-        invisible(TRUE)
+        stop("unexpexted error")
       })
     }
   }

@@ -48,10 +48,11 @@ Rstudioを再起動してパッケージを読み込み、以下のようなメ�
 
 ``` r
 library(tidyverse)
+#> Warning: package 'ggplot2' was built under R version 4.3.3
 #> ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 #> ✔ dplyr     1.1.4     ✔ readr     2.1.5
 #> ✔ forcats   1.0.0     ✔ stringr   1.5.1
-#> ✔ ggplot2   3.5.1     ✔ tibble    3.2.1
+#> ✔ ggplot2   3.5.2     ✔ tibble    3.2.1
 #> ✔ lubridate 1.9.3     ✔ tidyr     1.3.1
 #> ✔ purrr     1.0.2     
 #> ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
@@ -64,7 +65,10 @@ library(jpndistrict)
 #> No.603FY2017 information usage <https://www.gsi.go.jp>)
 library(agrmesh)
 #> Loading required package: tidync
-#> ℹ WELCOME to R-AMGSDS interface (ver.0.0.1.5) ℹ 農研機構は、農業分野や他の分野における研究・開発・教育・試用を目的とする者に、審査に基づきメッシュ農業気象データ（以下、「このデータ」と呼ぶ。）の利用を許可します。ℹ 特に許可されない限り、このデータを他に転載したり第三者に提供したりすることはできません。ℹ このデータを利用して作成した情報を販売することはできません。ℹ 利用者は、利用期間の終了後、速やかに利用報告をすることとします。ℹ 農研機構は、利用者がこのデータの利用によって生じた結果、ならびに、このデータが利用できないことによって生じた結果について、いかなる責任も負いません。ℹ このデータを利用して得た成果等を公表する場合は、「農研機構メッシュ農業気象データ（The Agro-Meteorological Grid Square Data, NARO）」を利用した旨を明記してください。✔ USERID and PASSWORD -> verified
+#> ℹ WELCOME to R-AMGSDS interface (ver.0.0.1.10) ℹ 農研機構は、農業分野や他の分野における研究・開発・教育・試用を目的とする者に、審査に基づきメッシュ農業気象データ（以下、「このデータ」と呼ぶ。）の利用を許可します。ℹ 特に許可されない限り、このデータを他に転載したり第三者に提供したりすることはできません。ℹ このデータを利用して作成した情報を販売することはできません。ℹ 利用者は、利用期間の終了後、速やかに利用報告をすることとします。ℹ 農研機構は、利用者がこのデータの利用によって生じた結果、ならびに、このデータが利用できないことによって生じた結果について、いかなる責任も負いません。ℹ このデータを利用して得た成果等を公表する場合は、「農研機構メッシュ農業気象データ（The Agro-Meteorological Grid Square Data, NARO）」を利用した旨を明記してください。
+#> ℹ WELCOME to R-AMGSDS interface (ver.0.0.1.10) 
+#> ℹ Please consider to cite this pacakge in your publications, see citation('agrmesh')
+#> ✔ USERID and PASSWORD -> verified
 ```
 
 ## 2. オンラインでの利用
@@ -86,8 +90,8 @@ print(point_daily_temp)
 #> # A tibble: 2 × 5
 #>   time         lat   lon site_id TMP_mea
 #>   <date>     <dbl> <dbl> <chr>     <dbl>
-#> 1 2025-04-02  43.0  141. 1           3.4
-#> 2 2025-04-02  26.2  128. 2          18.6
+#> 1 2025-07-17  43.0  141. 1          25.3
+#> 2 2025-07-17  26.2  128. 2          28.5
 ```
 
 出力された`point_daily_temp`は、日付 (`time`)、緯度・経度
@@ -481,8 +485,8 @@ MB 程度です。
 args(load_amgsds)
 #> function (times = Sys.time(), lats, lons, elements, mode = "point", 
 #>     source = "daily", output = "tibble", model = "MIROC5", RCP = "RCP8.5", 
-#>     is_clim = FALSE, server = "amd.rd.naro.go.jp/opendap", .silent = TRUE, 
-#>     localdir, autodownload = FALSE) 
+#>     is_clim = FALSE, server = "amd.rd.naro.go.jp/opendap", .ver = "AMD", 
+#>     .silent = TRUE, localdir, autodownload = FALSE) 
 #> NULL
 ```
 
@@ -589,6 +593,9 @@ jpndistrictパッケージが提供する行政区画データを利用した図
   - `download_netcdf`がデフォルトで`server = "amd.rd.naro.go.jp/opendap"`を引数として持つように変更しました
     (@Yuki-Kanamori,
     [\#4](https://github.com/KeachMurakami/agrmesh/issues/4))。
+- 2025-07-17 (ver. 0.0.1.0010)
+  - パッケージ起動時のインターネットアクセスとID/PW認証でcurlを使うよう変更しました
+    (エンドユーザに影響は出ません)。
 
 <!-- ## 4. 実践的な使用例 -->
 <!-- いくつかの実践的なサンプルを示します。 -->

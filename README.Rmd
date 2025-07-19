@@ -452,6 +452,8 @@ jpndistrictパッケージが提供する行政区画データを利用した図
 - 2025-04-02 (ver. 0.0.1.0007)
   - 取得可能な予報値の範囲を適宜更新するように設定しました。
   - `download_netcdf`がデフォルトで`server = "amd.rd.naro.go.jp/opendap"`を引数として持つように変更しました (@Yuki-Kanamori, [#4](https://github.com/KeachMurakami/agrmesh/issues/4))。
+- 2025-07-17 (ver. 0.0.1.0010)
+  - パッケージ起動時のインターネットアクセスとID/PW認証でcurlを使うよう変更しました (エンドユーザに影響は出ません)。
 
 
 <!-- ## 4. 実践的な使用例 -->
