@@ -4,19 +4,10 @@
 \alias{amgsds_config}
 \title{Verify and initialize id and pw for AMGSDS system}
 \usage{
-amgsds_config(
-  userid = Sys.getenv("amgsds_id"),
-  password = Sys.getenv("amgsds_pw"),
-  server = "https://amd.rd.naro.go.jp/opendap",
-  .force = FALSE
-)
+amgsds_config(mode = .pkg_config$active_mode, .force = FALSE)
 }
 \arguments{
-\item{userid}{your user id issued by the development group}
-
-\item{password}{your password issued by the development group}
-
-\item{server}{URL for OPeNDAP server}
+\item{mode}{chr. AMGSDS system mode, "oracle" or "classic" (for commercial users)}
 
 \item{.force}{logical. pass verification for offline .onLoad}
 }

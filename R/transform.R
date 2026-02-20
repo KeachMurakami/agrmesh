@@ -4,7 +4,6 @@
 #' @param amgsds_array AMGSDS array object (output = "array")
 #' @param time_index indices of time to be extracted
 #' @param na.rm logical. missing values including NaN are removed if `TRUE`
-#' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @importFrom rlang :=
 #'
@@ -33,7 +32,7 @@ unfold_array <-
       n_lon  <- length(val_lon)
 
       result <-
-        tibble::tibble(rlang::`!!`(variable) := c(dat)) %>%
+        tibble::tibble(rlang::`!!`(variable) := c(dat)) |>
         dplyr::mutate(time = rep(val_time, each = n_lon * n_lat),
                       lat = rep(rep(val_lat, each  = n_lon), times = n_time),
                       lon = rep(rep(val_lon, times = n_lat), times = n_time),
@@ -46,7 +45,7 @@ unfold_array <-
     } else {
       # when some elements are fetched at once and given as a list
       result <-
-        purrr::map(amgsds_array,  ~ unfold_array(., time_index = time_index, na.rm = na.rm)) %>%
+        purrr::map(amgsds_array,  ~ unfold_array(., time_index = time_index, na.rm = na.rm)) |>
         purrr::reduce(dplyr::full_join, c("time", "lat", "lon"))
     }
 
@@ -71,7 +70,7 @@ fold_tibble <-
         split(amgsds_tibble, amgsds_tibble$time) |>
         purrr::map(function(x){
           dplyr::select(x, .data$lat, .data$lon, tidyselect::all_of(v)) |>
-          tidyr::spread(lat, !!(v)) |>
+          tidyr::spread(.data$lat, !!(v)) |>
           dplyr::select(-.data$lon)
         }) |>
         abind::abind(along = 3)

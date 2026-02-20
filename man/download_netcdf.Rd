@@ -7,7 +7,7 @@
 download_netcdf(
   amgsds_path,
   outdir,
-  server = "amd.rd.naro.go.jp/opendap",
+  server = Sys.getenv("amgsds_server"),
   .silent = TRUE
 )
 }

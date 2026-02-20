@@ -2,15 +2,13 @@
 % Please edit documentation in R/fetch.R
 \name{replace_stop_words}
 \alias{replace_stop_words}
-\title{Replace stop words in amgsds paths for WindowsOS}
+\title{Replace stop words in amgsds paths}
 \usage{
-replace_stop_words(str, rev = FALSE)
+replace_stop_words(str)
 }
 \arguments{
 \item{str}{One or more character vectors.}
-
-\item{rev}{Restore replaced words if \code{TRUE}}
 }
 \description{
-Replace stop words in amgsds paths for WindowsOS
+Replace stop words in amgsds paths
 }

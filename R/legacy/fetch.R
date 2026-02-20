@@ -12,6 +12,7 @@
 #' @param is_clim return climatological normals if `TRUE`
 #' @param .ver AMD system version (experimental)
 #'
+#' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #'
 #' @export
@@ -44,7 +45,7 @@ generate_path <-
     }
 
     # check data availability
-    check_source_availability(source, element, times, is_clim)
+      check_source_availability(source, element, times, is_clim)
     if(source == "scenario"){
       check_scenario_availability(.times = times, .element = element, .model = model, .RCP = RCP)
     }
@@ -73,36 +74,29 @@ generate_path <-
     generate_main <-
       function(meshes){
         if(source == "daily" & is_clim){
-          main <- stringr::str_glue("/{.ver}/{yyyy}/c{element}/AMDy{yyyy}p{meshes}c{element}")
+          main <- stringr::str_glue("/{.ver}/{yyyy}/c{element}/AMDy{yyyy}p{meshes}c{element}.nc.nc")
         } else if(source == "daily" & !is_clim){
-          main <- stringr::str_glue("/{.ver}/{yyyy}/e{element}/AMDy{yyyy}p{meshes}e{element}")
+          main <- stringr::str_glue("/{.ver}/{yyyy}/e{element}/AMDy{yyyy}p{meshes}e{element}.nc.nc")
         } else if(source == "hourly" & is_clim){
           # this line will not appear because of `check_source_availability`
           stop("climatological normals for hourly data are not available")
         } else if(source == "hourly" & !is_clim){
-          main <- stringr::str_glue("/AMD_Hourly/{yyyy}/e{element}/AMDy{yyyy}p{meshes}e_h_{element}")
+          main <- stringr::str_glue("/AMD_Hourly/{yyyy}/e{element}/AMDy{yyyy}p{meshes}e_h_{element}.nc.nc")
         } else if(source == "scenario" & is_clim){
           # this line will not appear because of `check_source_availability`
           stop("climatological normals for scenario data are not available")
         } else if(source == "scenario" & !is_clim){
-          main <- stringr::str_glue("/AMS/{model}/{RCP}/{yyyy}/e{element}/AMSy{yyyy}p{meshes}e{element}")
+          main <- stringr::str_glue("/AMS/{model}/{RCP}/{yyyy}/e{element}/AMSy{yyyy}p{meshes}e{element}.nc.nc")
         } else if(source == "geo"){
-          main <- stringr::str_glue("/AMD/geodata/g{element}/AMDy____p{meshes}g{element}")
+          main <- stringr::str_glue("/AMD/geodata/g{element}/AMDy____p{meshes}g{element}.nc.nc")
         }
-
-        return(paste0(main, get_config_value("opendap_ext")))
+        return(main)
       }
 
     # get lat/lon index of the covering cell
     lat_index <- paste0(as.numeric(mesh_3rd$lat_index), ":1:", as.numeric(mesh_3rd$lat_index))
     lon_index <- paste0(as.numeric(mesh_3rd$lon_index), ":1:", as.numeric(mesh_3rd$lon_index))
-
-    if(.pkg_config$active_mode == "oracle"){
-      path_point <- stringr::str_glue("{generate_main(mesh)}?dap4.ce=/time{time_index};/lat[{lat_index}];/lon[{lon_index}];/{element}{time_index}[{lat_index}][{lon_index}]")
-      } else {
-        path_point <- stringr::str_glue("{generate_main(mesh)}?{element}{time_index}[{lat_index}][{lon_index}]")
-      }
-
+    path_point <- stringr::str_glue("{generate_main(mesh)}?{element}{time_index}[{lat_index}][{lon_index}]")
 
     if(length(lons) == 1 & length(lats) == 1){
       path_area <- path_point
@@ -134,47 +128,41 @@ generate_path <-
         lon_3rd <- c(paste0(as.numeric(substring(lon_w, 3, 4)), ":1:79"), rep("0:1:79", max(length(lon_1st) - 2, 0)), paste0("0:1:", as.numeric(substring(lon_e, 3, 4))))
       }
 
-      if(.pkg_config$active_mode == "oracle"){
-        paths <-
-          tidyr::crossing(lat = paste0(lat_1st, "_", lat_3rd),
-                          lon = paste0(lon_1st, "_", lon_3rd)) |>
-          tidyr::separate(.data$lat, into = c("lat_1st", "lat_3rd"), sep = "_", remove = TRUE) |>
-          tidyr::separate(.data$lon, into = c("lon_1st", "lon_3rd"), sep = "_", remove = TRUE) |>
-          dplyr::mutate(mesh = paste0(lat_1st, lon_1st),
-                        path_comp = stringr::str_glue("{generate_main(mesh)}"),
-                        path_area = stringr::str_glue("{path_comp}?dap4.ce=/time{time_index};/lat[{lat_3rd}];/lon[{lon_3rd}];/{element}{time_index}[{lat_3rd}][{lon_3rd}]"))
-        path_area <- paths$path_area
-        path_complete <- paths$path_comp
-      } else {
-        paths <-
-          tidyr::crossing(lat = paste0(lat_1st, "_", lat_3rd),
-                          lon = paste0(lon_1st, "_", lon_3rd)) |>
-          tidyr::separate(.data$lat, into = c("lat_1st", "lat_3rd"), sep = "_", remove = TRUE) |>
-          tidyr::separate(.data$lon, into = c("lon_1st", "lon_3rd"), sep = "_", remove = TRUE) |>
-          dplyr::mutate(mesh = paste0(lat_1st, lon_1st),
-                        path_comp = stringr::str_glue("{generate_main(mesh)}"),
-                        path_area = stringr::str_glue("{path_comp}?{element}{time_index}[{lat_3rd}][{lon_3rd}]"))
-        path_area <- paths$path_area
-        path_complete <- paths$path_comp
-      }
+      paths <-
+        tidyr::crossing(lat = paste0(lat_1st, "_", lat_3rd),
+                        lon = paste0(lon_1st, "_", lon_3rd)) %>%
+        tidyr::separate(.data$lat, into = c("lat_1st", "lat_3rd"), sep = "_", remove = TRUE) %>%
+        tidyr::separate(.data$lon, into = c("lon_1st", "lon_3rd"), sep = "_", remove = TRUE) %>%
+        dplyr::mutate(mesh = paste0(lat_1st, lon_1st),
+                      path_comp = stringr::str_glue("{generate_main(mesh)}"),
+                      path_area = stringr::str_glue("{path_comp}?{element}{time_index}[{lat_3rd}][{lon_3rd}]"))
+
+      path_area <- paths$path_area
+      path_complete <- paths$path_comp
 
       align <- c(length(lat_1st), length(lon_1st))
     }
 
-    list(point = path_point, area = path_area, complete = path_complete) |>
+    list(point = path_point, area = path_area, complete = path_complete) %>%
       purrr::map(`attributes<-`, list(mesh = mesh_3rd, align = align))
   }
 
-#' Replace stop words in amgsds paths
+#' Replace stop words in amgsds paths for WindowsOS
 #'
 #' @param str One or more character vectors.
+#' @param rev Restore replaced words if `TRUE`
 #'
 replace_stop_words <-
-  function(str){
-    str <- stringr::str_remove(str, pattern = "\\?dap4.ce=.*")
-    head <- dirname(str)
-    body <- basename(str) |> stringr::str_remove(pattern = "\\?.*")
-    return(paste0(head, "/", body))
+  function(str, rev = FALSE){
+    if(!rev){
+      str <- stringr::str_replace_all(string = str, pattern = "\\?", replacement = "____")
+      str <- stringr::str_replace_all(string = str, pattern = ":", replacement = "----")
+      str <- stringr::str_replace_all(string = str, pattern = "([A-Z])----", replacement = paste0(substr(str, 1, 1), ":"))
+    } else {
+      str <- stringr::str_replace_all(string = str, pattern = "____", replacement = "?")
+      str <- stringr::str_replace_all(string = str, pattern = "----", replacement = ":")
+    }
+    return(str)
   }
 
 
@@ -189,7 +177,9 @@ replace_stop_words <-
 #' @param .silent suppress download messages if `TRUE`
 #' @export
 download_netcdf <-
-  function(amgsds_path, outdir, server = Sys.getenv("amgsds_server"), .silent = TRUE){
+  function(amgsds_path, outdir, server = "amd.rd.naro.go.jp/opendap", .silent = TRUE){
+
+    remote <- stringr::str_glue('https://{server}/')
 
     if(stringr::str_detect(amgsds_path[1], "AMSy....p")){
       valid_meshes <- stringr::str_c(paste0("p", nonempty_meshes_fewer), collapse = "|")
@@ -198,56 +188,26 @@ download_netcdf <-
     }
     available_path <- stringr::str_subset(amgsds_path, valid_meshes)
 
-    from <- paste0(server, available_path)
+    from <- paste0(remote, available_path)
     to <- paste0(outdir, available_path)
 
-    # cat("\nDownloaded from:\n", from); cat("\nDownloaded to:\n", replace_stop_words(to))
-
+    # curl handler for Basic access authentication
     handle <- curl::new_handle()
-    if(.pkg_config$active_mode == "oracle"){
-      access_token <- get_access_token()
+    curl::handle_setopt(handle, userpwd = stringr::str_glue('{Sys.getenv("amgsds_id")}:{Sys.getenv("amgsds_pw")}'))
+    curl::handle_setopt(handle, sslversion = 6)
+    curl::handle_setopt(handle, useragent = 'curl/7.50.1')
+    curl::handle_setopt(handle, httpheader = c('Accept' = '*/*'))
 
-      suppressWarnings({
-        purrr::walk(dirname(to), dir.create, recursive = TRUE, showWarnings = FALSE)
+    suppressWarnings({
+      purrr::walk(dirname(to), dir.create, recursive = TRUE, showWarnings = FALSE)
 
-        tryCatch({
-          purrr::walk2(from, replace_stop_words(to), function(FROM, TO){
-            httr2::request(FROM) |>
-              httr2::req_headers(
-                `User-Agent`    = "curl/7.50.1",
-                Accept          = "*/*",
-                Authorization   = paste("Bearer", access_token[[1]])
-              ) |>
-              httr2::req_perform(path = TO)
-          })
-        },
-        error = function(e){
-          stop("\u30c7\u30fc\u30bf\u306e\u53d6\u5f97\u306b\u5931\u6557\u3057\u307e\u3057\u305f\u3002amgsds_config()\u3092\u5b9f\u884c\u3057\u3001\u30cd\u30c3\u30c8\u30ef\u30fc\u30af\u306b\u63a5\u7d9a\u3055\u308c\u3066\u3044\u308b\u304b\u3001ID\u30fbPW\u304c\u8a8d\u8a3c\u3055\u308c\u308b\u304b\u3001\u306e\uff12\u70b9\u3092\u78ba\u8a8d\u3057\u3066\u304f\u3060\u3055\u3044\u3002\r\n\u5c06\u6765\u30b7\u30ca\u30ea\u30aa\u30c7\u30fc\u30bf\u3092\u5229\u7528\u3057\u3066\u3044\u308b\u5834\u5408\u306b\u306f\u3001\u30e2\u30c7\u30eb\u3068RCP\u3001\u5bfe\u8c61\u6642\u671f\u304c\u9069\u5207\u306b\u8a2d\u5b9a\u3055\u308c\u3066\u3044\u308b\u304b\u3092\u78ba\u8a8d\u3057\u3066\u304f\u3060\u3055\u3044\u3002")
-        })
+      tryCatch({
+        purrr::walk2(from, replace_stop_words(to), ~ curl::curl_download(url = .x, destfile = .y, quiet = .silent, handle = handle))
+      },
+      error = function(e){
+        stop("\u30c7\u30fc\u30bf\u306e\u53d6\u5f97\u306b\u5931\u6557\u3057\u307e\u3057\u305f\u3002amgsds_config()\u3092\u5b9f\u884c\u3057\u3001\u30cd\u30c3\u30c8\u30ef\u30fc\u30af\u306b\u63a5\u7d9a\u3055\u308c\u3066\u3044\u308b\u304b\u3001ID\u30fbPW\u304c\u8a8d\u8a3c\u3055\u308c\u308b\u304b\u3001\u306e\uff12\u70b9\u3092\u78ba\u8a8d\u3057\u3066\u304f\u3060\u3055\u3044\u3002\r\n\u5c06\u6765\u30b7\u30ca\u30ea\u30aa\u30c7\u30fc\u30bf\u3092\u5229\u7528\u3057\u3066\u3044\u308b\u5834\u5408\u306b\u306f\u3001\u30e2\u30c7\u30eb\u3068RCP\u3001\u5bfe\u8c61\u6642\u671f\u304c\u9069\u5207\u306b\u8a2d\u5b9a\u3055\u308c\u3066\u3044\u308b\u304b\u3092\u78ba\u8a8d\u3057\u3066\u304f\u3060\u3055\u3044\u3002")
       })
-
-    } else {
-      # curl handler for Basic access authentication
-      curl::handle_setopt(handle, userpwd = stringr::str_glue('{Sys.getenv("amgsds_id")}:{Sys.getenv("amgsds_pw")}'))
-      curl::handle_setopt(handle, sslversion = 6)
-      curl::handle_setopt(handle, useragent = 'curl/7.50.1')
-      curl::handle_setopt(handle, httpheader = c('Accept' = '*/*'))
-
-      suppressWarnings({
-        purrr::walk(dirname(to), dir.create, recursive = TRUE, showWarnings = FALSE)
-
-        tryCatch({
-          purrr::walk2(from, replace_stop_words(to), function(FROM, TO){
-            # curl::curl_download(FROM, "~/Downloads/test.nc", quiet = .silent, handle = handle)
-            curl::curl_download(FROM, TO, quiet = .silent, handle = handle)
-          })
-        },
-        error = function(e){
-          stop("\u30c7\u30fc\u30bf\u306e\u53d6\u5f97\u306b\u5931\u6557\u3057\u307e\u3057\u305f\u3002amgsds_config()\u3092\u5b9f\u884c\u3057\u3001\u30cd\u30c3\u30c8\u30ef\u30fc\u30af\u306b\u63a5\u7d9a\u3055\u308c\u3066\u3044\u308b\u304b\u3001ID\u30fbPW\u304c\u8a8d\u8a3c\u3055\u308c\u308b\u304b\u3001\u306e\uff12\u70b9\u3092\u78ba\u8a8d\u3057\u3066\u304f\u3060\u3055\u3044\u3002\r\n\u5c06\u6765\u30b7\u30ca\u30ea\u30aa\u30c7\u30fc\u30bf\u3092\u5229\u7528\u3057\u3066\u3044\u308b\u5834\u5408\u306b\u306f\u3001\u30e2\u30c7\u30eb\u3068RCP\u3001\u5bfe\u8c61\u6642\u671f\u304c\u9069\u5207\u306b\u8a2d\u5b9a\u3055\u308c\u3066\u3044\u308b\u304b\u3092\u78ba\u8a8d\u3057\u3066\u304f\u3060\u3055\u3044\u3002")
-        })
-      })
-    }
-
+    })
 
   }
 
@@ -258,6 +218,7 @@ download_netcdf <-
 #' @param amgsds_path path object generated by generate_path function
 #' @param output format of output object
 #' @param localdir local directory for downloaded NetCDF files
+#' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @export
 read_netcdf <-
@@ -278,7 +239,7 @@ read_netcdf <-
 
     if(output == "tibble"){
       result <-
-        ncconnect |>
+        ncconnect %>%
         purrr::map_dfr(.id = "site_id", function(con){
           if(is.null(con)){
             return(NULL)
@@ -289,15 +250,15 @@ read_netcdf <-
 
       if(is_geo){
         result <-
-          dplyr::select(result, .data$lat, .data$lon, dplyr::everything()) |>
+          dplyr::select(result, .data$lat, .data$lon, dplyr::everything()) %>%
           dplyr::mutate(time = "----", .before = 1)
       } else if(is_hourly){
         result <-
-          dplyr::select(result, .data$time, .data$lat, .data$lon, dplyr::everything()) |>
+          dplyr::select(result, .data$time, .data$lat, .data$lon, dplyr::everything()) %>%
           dplyr::mutate(time = as.POSIXct(.data$time * 3600, origin = "1899-12-31 15:00", tz = "Asia/Tokyo"))
       } else {
         result <-
-          dplyr::select(result, .data$time, .data$lat, .data$lon, dplyr::everything()) |>
+          dplyr::select(result, .data$time, .data$lat, .data$lon, dplyr::everything()) %>%
           dplyr::mutate(time = as.Date(.data$time, origin = "1900-01-01", tz = "Asia/Tokyo"))
       }
 
@@ -316,21 +277,21 @@ read_netcdf <-
       } else {
         axis <- list(lon = "lon", lat = "lat", time = "time")
       }
-.
+
       axes <-
-        axis |>
+        axis %>%
         purrr::map(function(x){
-          ncconnect |>
+          ncconnect %>%
             purrr::map(function(con){
               if(is.null(con)){
                 return(NULL)
               } else {
                 return(tidync::hyper_transforms(con))
               }
-            }) |>
-            purrr::map_dfr(x) |>
-            dplyr::pull(x) |>
-            unique() |> sort()
+            }) %>%
+            purrr::map_dfr(x) %>%
+            dplyr::pull(x) %>%
+            unique %>% sort
         })
 
       if(is_geo){
@@ -342,7 +303,7 @@ read_netcdf <-
       }
 
       val <-
-        ncconnect |>
+        ncconnect %>%
         purrr::map(function(con){
           if(is.null(con)){
             return(NULL)
@@ -372,15 +333,15 @@ read_netcdf <-
       edge_west  <- meshes[1,]
       edge_east  <- meshes[align[2],]
 
-      nrow_south <- purrr::map(val[edge_south], ncol) |> unlist() |> unique()
-      nrow_north <- purrr::map(val[edge_north], ncol) |> unlist() |> unique()
-      ncol_west <-  purrr::map(val[edge_west], nrow)  |> unlist() |> unique()
-      ncol_east <-  purrr::map(val[edge_east], nrow)  |> unlist() |> unique()
+      nrow_south <- purrr::map(val[edge_south], ncol) %>% unlist %>% unique
+      nrow_north <- purrr::map(val[edge_north], ncol) %>% unlist %>% unique
+      ncol_west <-  purrr::map(val[edge_west], nrow) %>% unlist %>% unique
+      ncol_east <-  purrr::map(val[edge_east], nrow) %>% unlist %>% unique
 
       for(LAT in which(non_empty_lat)){
         for(LON in which(non_empty_lon)){
-          # for(LAT in 1:align[1]){
-          #   for(LON in 1:align[2]){
+      # for(LAT in 1:align[1]){
+      #   for(LON in 1:align[2]){
           index <- (LAT-1) * align[2] + LON
 
           if(LAT == 1){
@@ -411,9 +372,9 @@ read_netcdf <-
 
       result <-
         purrr::map(1:align[1], function(x){
-          val[(x - 1) * align[2] + 1:align[2]] |>
+          val[(x - 1) * align[2] + 1:align[2]] %>%
             abind::abind(along = 1)
-        }) |>
+        }) %>%
         abind::abind(along = 2)
 
       ###############################
@@ -447,9 +408,11 @@ read_netcdf <-
 #' @param model climate simulation model for scenario data
 #' @param RCP Representative Concentration Pathways for scenario data
 #' @param is_clim logical. return climatological normals if `TRUE`
-#' @param server URL for OPeNDAP server
+#' @param server URL for OPeNDAP server (experimental)
 #' @param .ver AMD system version (experimental)
 #' @param .silent logical. suppress download message if `TRUE`
+#'
+#' @importFrom magrittr %>%
 #'
 #' @examples
 #' \dontrun{
@@ -469,7 +432,7 @@ fetch_amgsds <-
            source = "daily",
            output = "tibble",
            model = "MIROC5", RCP = "RCP8.5",
-           is_clim = FALSE, server =  Sys.getenv("amgsds_server"), .ver = "AMD", .silent = TRUE){
+           is_clim = FALSE, server = "amd.rd.naro.go.jp/opendap", .ver = "AMD", .silent = TRUE){
 
     yyyy <- unique(lubridate::year(times))
 
@@ -505,7 +468,7 @@ fetch_amgsds <-
               c(lubridate::ymd(paste0(multiyears[y], "-01-01"), tz = "Asia/Tokyo"), lubridate::ymd(paste0(multiyears[y], "-12-31"), tz = "Asia/Tokyo"))
             }
 
-          }) |>
+          }) %>%
           purrr::map(lubridate::date)
 
         result <-
@@ -522,11 +485,11 @@ fetch_amgsds <-
         purrr::map(elements,  ~ fetch_amgsds(times, lats, lons, ., mode, source, output, model, RCP, is_clim, server, .ver, .silent))
       if(output == "tibble"){
         common_names <-
-          purrr::map(result, names) |>
+          purrr::map(result, names) %>%
           purrr::reduce(intersect)
 
         result <-
-          result |>
+          result %>%
           purrr::reduce(dplyr::full_join, common_names)
 
       }
@@ -536,11 +499,11 @@ fetch_amgsds <-
 
     if(output == "tibble" & is_hour_explicit){
       result <-
-        result |>
+        result %>%
         dplyr::filter(dplyr::between(.data$time, min(times), max(times)))
     } else if(output == "tibble" & !is_hour_explicit){
       result <-
-        result |>
+        result %>%
         dplyr::filter(dplyr::between(.data$time, min(times), max(times) + lubridate::hours(23)))
     }
     return(result)
@@ -559,7 +522,7 @@ fetch_amgsds <-
 #' @param model climate simulation model for scenario data
 #' @param RCP Representative Concentration Pathways for scenario data
 #' @param is_clim logical. return climatological normals if `TRUE`
-#' @param server URL for OPeNDAP server
+#' @param server URL for OPeNDAP server (experimental)
 #' @param .ver AMD system version (experimental)
 #' @param .silent logical. suppress download message if `TRUE`
 #' @param localdir localdir directory for downloaded NetCDF files
@@ -573,7 +536,7 @@ load_amgsds <-
            source = "daily",
            output = "tibble",
            model = "MIROC5", RCP = "RCP8.5",
-           is_clim = FALSE, server =  Sys.getenv("amgsds_server"), .ver = "AMD", .silent = TRUE,
+           is_clim = FALSE, server = "amd.rd.naro.go.jp/opendap", .ver = "AMD", .silent = TRUE,
            localdir, autodownload = FALSE){
     if(length(elements) == 1){
       amgsds_path <-
@@ -664,11 +627,11 @@ load_amgsds <-
 
           if(source == "hourly"){
             result0 <-
-              result0 |>
+              result0 %>%
               dplyr::filter(dplyr::between(.data$time, min(times), max(times)))
           } else {
             result0 <-
-              result0 |>
+              result0 %>%
               dplyr::filter(dplyr::between(.data$time, as.Date.character(min(times)), as.Date.character(max(times))))
           }
 
@@ -708,11 +671,11 @@ load_amgsds <-
         purrr::map(elements,  ~ load_amgsds(times, lats, lons, ., mode, source, output, model, RCP, is_clim, .silent, localdir, autodownload))
       if(output == "tibble"){
         common_names <-
-          purrr::map(result, names) |>
+          purrr::map(result, names) %>%
           purrr::reduce(intersect)
 
         result <-
-          result |>
+          result %>%
           purrr::reduce(dplyr::full_join, common_names)
       }
     }

@@ -18,7 +18,6 @@ check_latlon_range <-
 #'
 #' @param source type of source: daily, hourly, geo, or scenario
 #' @param internal_use set TRUE for internal data check functions
-#' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @importFrom lubridate ymd
 #' @importFrom lubridate ymd_h
@@ -145,7 +144,7 @@ preview_dataset <-
           "pref_4400",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5927\u5206\u770c",
           "pref_4500",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u5bae\u5d0e\u770c",
           "pref_4600",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u9e7f\u5150\u5cf6\u770c",
-          "pref_4700",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u6c96\u7e04\u770c") %>%
+          "pref_4700",       "-",       date_00010101, date_99991231, "\u90fd\u9053\u5e9c\u770c\u5225\u7bc4\u56f2\u56f3 \u6c96\u7e04\u770c") |>
           dplyr::mutate(clim_from = .data$from)
     } else if(source == "scenario"){
       availability_table <-
@@ -166,13 +165,15 @@ preview_dataset <-
     if(internal_use){
       return(availability_table)
     } else {
-      availability_table %>%
+      result <-
+        availability_table |>
         dplyr::mutate(clim_from = lubridate::year(.data$clim_from),
                       clim_from = dplyr::if_else(.data$clim_from == 9999, NA_real_, .data$clim_from),
                       clim_to = dplyr::if_else(is.na(.data$clim_from), NA_real_, lubridate::year(.data$to)),
-                      .before = 6) %>%
-        dplyr::rename(climatological_from = .data$clim_from, climatological_to = .data$clim_to) %>%
-        return()
+                      .before = 6) |>
+        dplyr::rename(climatological_from = .data$clim_from, climatological_to = .data$clim_to)
+
+      return(result)
     }
   }
 
@@ -393,12 +394,12 @@ point2code <-
     chr12 <- `%/%`(lat1, 40)
     lat2 <- `%%`(lat1, 40)
     chr5 <- `%/%`(lat2, 5)
-    chr7 <- `%%`(lat2, 5) %>% `*`(60) %>% `%/%`(30)
+    chr7 <- (`%%`(lat2, 5) * 60) %/% 30
     lon1 <- (lons - 100)
     chr34 <- `%/%`(lon1, 1)
-    lon2 <- `%%`(lon1, 1) %>% `*`(60)
+    lon2 <- `%%`(lon1, 1) * 60
     chr6 <- `%/%`(lon2, 7.5)
-    chr8 <- `%%`(lon2, 7.5) %>% `*`(60) %>% `%/%`(45)
+    chr8 <- (`%%`(lon2, 7.5) * 60) %/% 45
 
 
     code <- paste0(chr12, chr34, chr5, chr6, chr7, chr8)
@@ -420,7 +421,6 @@ point2code <-
 #'
 #' @param lats latitudes
 #' @param lons longitudes
-#' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #'
 #' @export
@@ -436,8 +436,8 @@ area2code <-
     lat_full <- seq(lb$lat, ru$lat, by = 2/3)
     lon_full <- seq(lb$lon, ru$lon, by = 1)
 
-    expand.grid(lat = lat_full, lon = lon_full) %>%
-      dplyr::mutate(code = point2code(.data$lat, .data$lon)) %>%
+    expand.grid(lat = lat_full, lon = lon_full) |>
+      dplyr::mutate(code = point2code(.data$lat, .data$lon)) |>
       dplyr::pull(.data$code)
   }
 

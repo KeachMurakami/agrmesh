@@ -21,7 +21,7 @@ unlink("~/amd_working/AMD/", recursive = TRUE)
 このパッケージは農研機構が運営するメッシュ農業気象データシステムをRから利用するためのインターフェイスです。
 システム全般に関する情報は[こちら](https://amu.rd.naro.go.jp/wiki_open/doku.php)を参照してください。
 Rstudioでの利用を想定しています。
-このパッケージはIntel Mac、M2 Mac、Windows 10、Linux (Ubuntu 22.04.1 LTS)で動作することが確認されていますが、とくにAppleCPUのMacではいくつかの依存性パッケージのインストールに苦戦する可能性があります。
+このパッケージはApple siliconのMacとWindows 11で動作することが確認されています。
 
 ## 1. ユーザ登録と初期設定
 
@@ -43,10 +43,26 @@ install.packages("sf") # shapeデータの利用のため
 install.packages('https://cran.r-project.org/src/contrib/Archive/tidync/tidync_0.3.0.tar.gz', repos=NULL, type='source') # NetCDFデータの利用のため
 devtools::install_github("uribo/jpndistrict") # 国内の行政区画データの利用のため
 
-devtools::install_github("KeachMurakami/agrmesh", upgrade = FALSE)
+devtools::install_github("KeachMurakami/agrmesh")
 ```
 
 インストール後に、`library(agrmesh)`を実行し、パッケージを読み込みます。
+2026年度からは**研究・開発・教育・試用ユーザ (以下, 検証ユーザ)**と**商用・業務ユーザ (以下, 一般ユーザ)**で認証方式が異なります。
+パッケージ読み込み時は、検証ユーザ向けの認証方式を利用するモードになっています。
+
+### 検証ユーザ
+
+システムの利用に[Oracle Identity Cloud Service (IDCS) を利用した多要素認証](https://amu.rd.naro.go.jp/wiki_open/doku.php?id=faq)が必要です。
+上記ページの「新認証システム利用マニュアル」のRに関するページを参照してください。
+
+次回の継続利用申請までは、暫定的に旧認証方式が利用可能です。
+起動時に`switch_system("classic")`を実行してください。
+
+### 一般ユーザ
+
+起動時に`switch_system("classic", server =  "XXXX")`を実行してください。
+`XXXX`にはたデータ提供企業から提供されるopendapサーバのURLを指定してください。
+
 初回読み込み時に環境設定ファイル (`.Renviron`) が開かれます。
 ユーザのR利用状況によっては既に数行分、`XXX=****`のような形式で設定が記入されている場合があります。
 末尾に以下のようにIDとパスワードを追記し、保存したのちにRstudioを再起動してください。
@@ -454,6 +470,8 @@ jpndistrictパッケージが提供する行政区画データを利用した図
   - `download_netcdf`がデフォルトで`server = "amd.rd.naro.go.jp/opendap"`を引数として持つように変更しました (@Yuki-Kanamori, [#4](https://github.com/KeachMurakami/agrmesh/issues/4))。
 - 2025-07-17 (ver. 0.0.1.0010)
   - パッケージ起動時のインターネットアクセスとID/PW認証でcurlを使うよう変更しました (エンドユーザに影響は出ません)。
+- 2026-01-21 (ver. 0.1.0)
+  - Oracle Identity Cloud Serviceの多要素認証に対応しました。
 
 
 <!-- ## 4. 実践的な使用例 -->

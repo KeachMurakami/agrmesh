@@ -15,7 +15,7 @@ load_amgsds(
   model = "MIROC5",
   RCP = "RCP8.5",
   is_clim = FALSE,
-  server = "amd.rd.naro.go.jp/opendap",
+  server = Sys.getenv("amgsds_server"),
   .ver = "AMD",
   .silent = TRUE,
   localdir,
@@ -43,7 +43,7 @@ load_amgsds(
 
 \item{is_clim}{logical. return climatological normals if \code{TRUE}}
 
-\item{server}{URL for OPeNDAP server (experimental)}
+\item{server}{URL for OPeNDAP server}
 
 \item{.ver}{AMD system version (experimental)}
 

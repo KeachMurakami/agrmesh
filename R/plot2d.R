@@ -28,12 +28,12 @@ check_variables <-
 polygonize <-
   function(amgsds_tibble){
     polys <-
-      amgsds_tibble %>%
+      amgsds_tibble |>
       dplyr::mutate(bound_lat0 = .data$lat - 1/240,
                     bound_lat1 = .data$lat + 1/240,
                     bound_lon0 = .data$lon - 1/160,
-                    bound_lon1 = .data$lon + 1/160) %>%
-      tidyr::nest(bbox = tidyselect::starts_with("bound")) %>%
+                    bound_lon1 = .data$lon + 1/160) |>
+      tidyr::nest(bbox = tidyselect::starts_with("bound")) |>
       dplyr::mutate(geometry =
                       purrr::map(.data$bbox, function(x){
                         do.call(rbind,
@@ -41,11 +41,11 @@ polygonize <-
                                      c(x$bound_lon1, x$bound_lat0),
                                      c(x$bound_lon1, x$bound_lat1),
                                      c(x$bound_lon0, x$bound_lat1),
-                                     c(x$bound_lon0, x$bound_lat0))) %>%
-                                   list %>%
+                                     c(x$bound_lon0, x$bound_lat0))) |>
+                                   list() |>
                                    sf::st_polygon()
                         })
-                    ) %>%
+                    ) |>
       sf::st_as_sf(crs = 4326)
   }
 
@@ -67,7 +67,7 @@ plot2d_shape <-
 
     # require(jpndistrict)
     if(class(amgsds_tibble)[1] %in% c("array", "list")){
-      amgsds_tibble <- amgsds_tibble %>% unfold_array()
+      amgsds_tibble <- amgsds_tibble |> unfold_array()
     }
 
     variable_name <- check_variables(amgsds_tibble, element_index)
@@ -116,7 +116,7 @@ plot2d_leaflet <-
   function(amgsds_tibble, element_index = 1, time_index = 1, alpha = .7, pallete = "viridis", basemap = leaflet:::providers$Esri.WorldImagery, thin = 1){
 
     if(class(amgsds_tibble)[1] %in% c("array", "list")){
-      amgsds_tibble <- amgsds_tibble %>% unfold_array()
+      amgsds_tibble <- amgsds_tibble |> unfold_array()
     }
 
     variable_name <- check_variables(amgsds_tibble, element_index)
@@ -135,22 +135,22 @@ plot2d_leaflet <-
     }
 
     polys <-
-      dat %>%
-      dplyr::filter(!is.na(.data$value)) %>%
-      polygonize() %>%
+      dat |>
+      dplyr::filter(!is.na(.data$value)) |>
+      polygonize() |>
       dplyr::sample_frac(size = thin)
 
     fill_pallete <- leaflet::colorNumeric(palette = pallete, domain = polys$value, na.color = NA)
 
-    leaflet::leaflet(polys) %>%
-      leaflet::addProviderTiles(provider = basemap) %>%
+    leaflet::leaflet(polys) |>
+      leaflet::addProviderTiles(provider = basemap) |>
       leaflet::addPolygons(popup = ~ as.character(round(value, 1)),
                            popupOptions = leaflet::popupOptions(maxWidth ="100%", closeOnClick = TRUE),
                            fillOpacity = alpha, stroke = FALSE,
-                           color = ~ fill_pallete(value), group = ~ time) %>%
+                           color = ~ fill_pallete(value), group = ~ time) |>
       leaflet::addLayersControl(
         baseGroups = sort(unique(polys$time)),
         options = leaflet::layersControlOptions(collapsed = FALSE)
-      ) %>%
+      ) |>
       leaflet::addLegend(pal = fill_pallete, values = ~ value, title = variable_name)
   }
