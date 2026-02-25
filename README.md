@@ -5,14 +5,13 @@
 
 このパッケージは農研機構が運営するメッシュ農業気象データシステムをRから利用するためのインターフェイスです。
 システム全般に関する情報は[こちら](https://amu.rd.naro.go.jp/wiki_open/doku.php)を参照してください。
-Rstudioでの利用を想定しています。 このパッケージはIntel Mac、M2
-Mac、Windows 10、Linux (Ubuntu 22.04.1
-LTS)で動作することが確認されていますが、とくにAppleCPUのMacではいくつかの依存性パッケージのインストールに苦戦する可能性があります。
+Rstudioでの利用を想定しています。 このパッケージはApple
+siliconのMacで動作確認されています。
 
 ## 1. ユーザ登録と初期設定
 
 システムの利用のためには[こちらのページ](https://amu.rd.naro.go.jp/wiki_open/doku.php?id=subscription)からユーザ登録をする必要があります。
-事務局から折返し連絡があり次第、以下のRでの作業に入ります。
+事務局からID・パスワードが発行されたのちに、Rで以下の設定を行います。
 
 `agrmesh`パッケージの動作に必要ないくつかのパッケージを先にインストールする必要があります。
 `sf`パッケージには動作OSによってはいくつかの事前準備が必要です。
@@ -29,11 +28,31 @@ install.packages("sf") # shapeデータの利用のため
 install.packages('https://cran.r-project.org/src/contrib/Archive/tidync/tidync_0.3.0.tar.gz', repos=NULL, type='source') # NetCDFデータの利用のため
 devtools::install_github("uribo/jpndistrict") # 国内の行政区画データの利用のため
 
-devtools::install_github("KeachMurakami/agrmesh", upgrade = FALSE)
+devtools::install_github("KeachMurakami/agrmesh")
 ```
 
-インストール後に、`library(agrmesh)`を実行し、パッケージを読み込みます。
-初回読み込み時に環境設定ファイル (`.Renviron`) が開かれます。
+**研究・開発・教育・試用ユーザ (以下, 検証ユーザ)**と**商用・業務ユーザ
+(以下, 一般ユーザ)**で認証方式が異なります。
+
+デフォルトでは**検証ユーザ向けの認証方式を利用するモード**になっています。
+
+### 検証ユーザ
+
+2026年2月末以降に新規利用登録・継続利用登録を行ったユーザは、システムの利用に[Oracle
+Identity Cloud Service (IDCS)
+を利用した多要素認証](https://amu.rd.naro.go.jp/wiki_open/doku.php?id=faq)が必要です。
+上記ページの「新認証システム利用マニュアル」のRに関するページを参照してください。
+
+次回の継続利用申請までは、暫定的に旧認証方式が利用可能です。
+起動時に`switch_system("classic")`を実行してください。
+以降の利用方法はこれまでと変わりません。
+
+### 一般ユーザ
+
+起動時に`switch_system("classic", server =  "XXXX")`を実行してください。
+`XXXX`にはデータ提供企業から提供されるopendapサーバのURLを指定してください。
+次に、`amgsds_config()`を実行してください。 環境設定ファイル
+(`.Renviron`) が開かれます。
 ユーザのR利用状況によっては既に数行分、`XXX=****`のような形式で設定が記入されている場合があります。
 末尾に以下のようにIDとパスワードを追記し、保存したのちにRstudioを再起動してください。
 
@@ -43,31 +62,28 @@ devtools::install_github("KeachMurakami/agrmesh", upgrade = FALSE)
     amgsds_id=YOURID
     amgsds_pw=YOURPW
 
-この設定を正しく終えると、以降はパッケージの読み込み時に自動的にユーザ認証がされます。
-Rstudioを再起動してパッケージを読み込み、以下のようなメッセージが表示されることを確認してください。
+この設定を正しく終えると、以降は自動的にユーザ認証がされます。
+Rstudioを再起動し、以下のようなメッセージが表示されることを確認してください。
 
 ``` r
-library(tidyverse)
-#> Warning: package 'ggplot2' was built under R version 4.3.3
-#> ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
-#> ✔ dplyr     1.1.4     ✔ readr     2.1.5
-#> ✔ forcats   1.0.0     ✔ stringr   1.5.1
-#> ✔ ggplot2   3.5.2     ✔ tibble    3.2.1
-#> ✔ lubridate 1.9.3     ✔ tidyr     1.3.1
-#> ✔ purrr     1.0.2     
-#> ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
-#> ✖ dplyr::filter() masks stats::filter()
-#> ✖ dplyr::lag()    masks stats::lag()
-#> ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
-library(jpndistrict)
-#> This package provide map data is based on the Digital Map 25000 (Map
-#> Image) published by Geospatial Information Authority of Japan (Approval
-#> No.603FY2017 information usage <https://www.gsi.go.jp>)
 library(agrmesh)
 #> Loading required package: tidync
-#> ℹ WELCOME to R-AMGSDS interface (ver.0.0.1.10) ℹ 農研機構は、農業分野や他の分野における研究・開発・教育・試用を目的とする者に、審査に基づきメッシュ農業気象データ（以下、「このデータ」と呼ぶ。）の利用を許可します。ℹ 特に許可されない限り、このデータを他に転載したり第三者に提供したりすることはできません。ℹ このデータを利用して作成した情報を販売することはできません。ℹ 利用者は、利用期間の終了後、速やかに利用報告をすることとします。ℹ 農研機構は、利用者がこのデータの利用によって生じた結果、ならびに、このデータが利用できないことによって生じた結果について、いかなる責任も負いません。ℹ このデータを利用して得た成果等を公表する場合は、「農研機構メッシュ農業気象データ（The Agro-Meteorological Grid Square Data, NARO）」を利用した旨を明記してください。
-#> ℹ WELCOME to R-AMGSDS interface (ver.0.0.1.10) 
-#> ℹ Please consider to cite this pacakge in your publications, see citation('agrmesh')
+#> 
+#> ── WELCOME to R-AMGSDS interface (ver.0.1.0) ───────────────────────────────────
+#> ℹ Please consider to cite the dataset and this pacakge in your publications, see citation('agrmesh')
+#> 農研機構は、農業分野や他の分野における研究・開発・教育・試用を目的とする者に、審査に基づきメッシュ農業気象データ（以下、「このデータ」と呼ぶ。）の利用を許可します。
+#> 特に許可されない限り、このデータを他に転載したり第三者に提供したりすることはできません。
+#> このデータを利用して作成した情報を販売することはできません。
+#> 利用者は、利用期間の終了後、速やかに利用報告をすることとします。
+#> 農研機構は、利用者がこのデータの利用によって生じた結果、ならびに、このデータが利用できないことによって生じた結果について、いかなる責任も負いません。
+#> このデータを利用して得た成果等を公表する場合は、「農研機構メッシュ農業気象データ（The
+#> Agro-Meteorological Grid Square Data,
+#> NARO）」とRパッケージ「agrmesh」を利用した旨を明記してください。
+#> ✔ Switched to oracle mode.
+switch_system("classic", server = "https://amd.rd.naro.go.jp/opendap/") # serverはデータ提供会社指定のもの
+#> ✔ Switched to classic mode.
+#> Data provider: https://amd.rd.naro.go.jp/opendap/
+amgsds_config()
 #> ✔ USERID and PASSWORD -> verified
 ```
 
@@ -90,8 +106,8 @@ print(point_daily_temp)
 #> # A tibble: 2 × 5
 #>   time         lat   lon site_id TMP_mea
 #>   <date>     <dbl> <dbl> <chr>     <dbl>
-#> 1 2025-07-17  43.0  141. 1          25.3
-#> 2 2025-07-17  26.2  128. 2          28.5
+#> 1 2026-02-25  43.0  141. 1          -3.5
+#> 2 2026-02-25  26.2  128. 2          20.2
 ```
 
 出力された`point_daily_temp`は、日付 (`time`)、緯度・経度
@@ -133,7 +149,7 @@ fetch_amgsds(
   output = "tibble",  # 結果の出力形式
                       # "tibble":   データフレーム形式
                       # "array":    配列形式
-                      # "raw":      tidyncパッケージによるnetcdfへのコネクション形式 
+                      # "raw":      tidyncパッケージによるnetcdfへのコネクション形式
   mode = "MIROC5",    # 将来気候データ作成に用いたモデル名
                       # source == "scenario"の場合にのみ有効
   RCP = "RCP8.5",     # 将来気候データ作成に用いた排出シナリオ名
@@ -152,13 +168,18 @@ fetch_amgsds(
 ``` r
 # 日時データの扱いにはlubridateパッケージが便利です
 library(lubridate)
+#> 
+#> Attaching package: 'lubridate'
+#> The following objects are masked from 'package:base':
+#> 
+#>     date, intersect, setdiff, union
 
 time_range <-
   ymd_hm(c("2023-12-30 13:30", "2024-01-02 22:30"), tz = "Asia/Tokyo") # tzを Asiz/TokyoまたはJapanに指定
   # ymd(c("2023-12-30", "2024-01-02"), tz = "Asia/Tokyo") なら4日間 = 96時間のデータを取得
 
 sites <-
-  tibble(
+  data.frame(
     site = c("Tokyo Tower", "Tokyo Sta.", "Mt. Fuji"),
     lat = c(35.66, 35.68, 35.36),
     lon = c(139.75, 139.77, 138.72)
@@ -177,15 +198,15 @@ print(point_hourly)
 #>    time                  lat   lon site_id   TMP    RH
 #>    <dttm>              <dbl> <dbl> <chr>   <dbl> <dbl>
 #>  1 2023-12-30 14:00:00  35.7  140. 1        14.6  41.3
-#>  2 2023-12-30 15:00:00  35.7  140. 1        13.7  53.7
-#>  3 2023-12-30 16:00:00  35.7  140. 1        12.8  58.5
-#>  4 2023-12-30 17:00:00  35.7  140. 1        10.1  65.4
-#>  5 2023-12-30 18:00:00  35.7  140. 1         9.7  64  
+#>  2 2023-12-30 15:00:00  35.7  140. 1        13.7  53.5
+#>  3 2023-12-30 16:00:00  35.7  140. 1        12.8  58.6
+#>  4 2023-12-30 17:00:00  35.7  140. 1        10.1  66.1
+#>  5 2023-12-30 18:00:00  35.7  140. 1         9.6  64.5
 #>  6 2023-12-30 19:00:00  35.7  140. 1         9.7  65.5
-#>  7 2023-12-30 20:00:00  35.7  140. 1         8.9  73.6
-#>  8 2023-12-30 21:00:00  35.7  140. 1         8.7  80.1
-#>  9 2023-12-30 22:00:00  35.7  140. 1         9    78.6
-#> 10 2023-12-30 23:00:00  35.7  140. 1         9.2  81.3
+#>  7 2023-12-30 20:00:00  35.7  140. 1         8.9  73.7
+#>  8 2023-12-30 21:00:00  35.7  140. 1         8.7  79.2
+#>  9 2023-12-30 22:00:00  35.7  140. 1         9    77.4
+#> 10 2023-12-30 23:00:00  35.7  140. 1         9.2  80.8
 #> # ℹ 233 more rows
 ```
 
@@ -194,6 +215,9 @@ print(point_hourly)
 Rコンソール上で`preview_dataset("hourly")`と打ち込めば取得可能な時間範囲を確認できます。
 
 #### 地理情報データ
+
+> \[!CAUTION\]
+> 元データ提供形式の変更のため、地理データの取得機能は現在停止しています。
 
 地理情報を取得したい場合、`source = "geo"`に変更し、地理要素に応じて`element = "altitude"`のように変更します。
 
@@ -206,12 +230,6 @@ point_altitude <-
   )
 
 print(point_altitude)
-#> # A tibble: 3 × 5
-#>   time    lat   lon site_id altitude
-#>   <chr> <dbl> <dbl> <chr>      <dbl>
-#> 1 ----   35.7  140. 1              4
-#> 2 ----   35.7  140. 2              3
-#> 3 ----   35.4  139. 3           3212
 ```
 
 取得可能な地理要素とその略称はRコンソール上で`preview_dataset("geo")`と打ち込めば確認できます。
@@ -239,16 +257,16 @@ print(point_scenario)
 #> # A tibble: 30 × 5
 #>    time         lat   lon site_id TMP_mea
 #>    <date>     <dbl> <dbl> <chr>     <dbl>
-#>  1 2070-05-01  35.7  140. 1          20.9
-#>  2 2070-05-02  35.7  140. 1          17.5
-#>  3 2070-05-03  35.7  140. 1          18.8
-#>  4 2070-05-04  35.7  140. 1          20.2
-#>  5 2070-05-05  35.7  140. 1          19.0
-#>  6 2070-05-06  35.7  140. 1          19.3
-#>  7 2070-05-07  35.7  140. 1          19.2
-#>  8 2070-05-08  35.7  140. 1          17.0
-#>  9 2070-05-09  35.7  140. 1          18.6
-#> 10 2070-05-10  35.7  140. 1          22.1
+#>  1 2070-05-01  35.7  140. 1          21.0
+#>  2 2070-05-02  35.7  140. 1          17.6
+#>  3 2070-05-03  35.7  140. 1          18.9
+#>  4 2070-05-04  35.7  140. 1          20.3
+#>  5 2070-05-05  35.7  140. 1          19.1
+#>  6 2070-05-06  35.7  140. 1          19.4
+#>  7 2070-05-07  35.7  140. 1          19.3
+#>  8 2070-05-08  35.7  140. 1          17.1
+#>  9 2070-05-09  35.7  140. 1          18.7
+#> 10 2070-05-10  35.7  140. 1          22.2
 #> # ℹ 20 more rows
 ```
 
@@ -258,9 +276,7 @@ print(point_scenario)
 ### 空間データの取得と可視化
 
 特定の地点に興味がある場合もありますが、空間分布に興味がある場合もあります。
-`mode = "area"`とすると指定された緯度・経度範囲内のメッシュのデータを取得でき、`output = "array"`とすることで、配列データとして出力を受け取ることができます。
-出力された`area_daily_rain`は\[緯度, 経度, 時間\]の３次元配列です。
-`attributes(area_daily_rain)`から、各次元の情報を得ることができます。
+`mode = "area"`とすると指定された緯度・経度範囲内のメッシュのデータを取得できます。
 
 ``` r
 area_daily_rain <-
@@ -268,24 +284,43 @@ area_daily_rain <-
     times = ymd(c("2023-01-10", "2023-01-11"), tz = "Japan"),
     lats = c(41.5, 43.8), lons = c(140.2, 142.0),
     elements = "APCP",
-    mode = "area",
-    output = "array"
-  )
+    mode = "area"
+    )
 
+print(area_daily_rain)
+#> # A tibble: 38,660 × 4
+#>    time         lat   lon  APCP
+#>    <date>     <dbl> <dbl> <dbl>
+#>  1 2023-01-10  41.5  140.   7.5
+#>  2 2023-01-10  41.5  140.   7.9
+#>  3 2023-01-10  41.5  140.   8.1
+#>  4 2023-01-10  41.5  140.   8.2
+#>  5 2023-01-10  41.5  140.   8.2
+#>  6 2023-01-10  41.5  140.   8.4
+#>  7 2023-01-10  41.5  140.   8.3
+#>  8 2023-01-10  41.5  140.   8.3
+#>  9 2023-01-10  41.5  140.   7.9
+#> 10 2023-01-10  41.5  140.   7.2
+#> # ℹ 38,650 more rows
+```
+
+空間データの解析で配列化した方が便利な場合には、`fold_tibble`を使い\[緯度,
+経度, 時間\]の３次元配列を取得することができます。
+`attributes(area_daily_rain_array)`から、各次元の情報を得ることができます。
+
+``` r
+area_daily_rain_array <- fold_tibble(area_daily_rain)
 str(attributes(area_daily_rain))
 #> List of 3
-#>  $ dim     : int [1:3] 146 277 2
-#>  $ axes    :List of 3
-#>   ..$ lon : num [1:146] 140 140 140 140 140 ...
-#>   ..$ lat : num [1:277] 41.5 41.5 41.5 41.5 41.5 ...
-#>   ..$ time: Date[1:2], format: "2023-01-10" "2023-01-11"
-#>  $ variable: chr "APCP"
+#>  $ names    : chr [1:4] "time" "lat" "lon" "APCP"
+#>  $ row.names: int [1:38660] 1 2 3 4 5 6 7 8 9 10 ...
+#>  $ class    : chr [1:3] "tbl_df" "tbl" "data.frame"
 ```
 
 標準実装されている`image`関数や、`fields`パッケージの`image.plot`関数で簡単な可視化が可能です。
 
 ``` r
-image(area_daily_rain[,,1])
+image(area_daily_rain_array[[1]][,,1])
 ```
 
 <img src="man/figures/README-plot_area_base-1.png" width="100%" />
@@ -294,9 +329,8 @@ image(area_daily_rain[,,1])
 
 # install.packages("fields") # if not installed
 library(fields)
-#> Warning: package 'fields' was built under R version 4.3.3
 #> Loading required package: spam
-#> Spam version 2.10-0 (2023-10-23) is loaded.
+#> Spam version 2.11-1 (2025-01-20) is loaded.
 #> Type 'help( Spam)' or 'demo( spam)' for a short introduction 
 #> and overview of this package.
 #> Help for individual functions is also obtained by adding the
@@ -309,17 +343,17 @@ library(fields)
 #> Loading required package: viridisLite
 #> 
 #> Try help(fields) to get started.
-image.plot(area_daily_rain[,,1])
+image.plot(area_daily_rain_array[[1]][,,1])
 ```
 
 <img src="man/figures/README-plot_area_base-2.png" width="100%" />
 
 現在主流な描画パッケージである`ggplot2`を使うとより細かい設定を行うことができます。
-fetchする際に`output = "tibble"`としておくか、arrayに`unfold_array`処理をかけると、`ggplot2`に適したlong形式のデータに整形できます。
+arrayに`unfold_array`処理をかけると、`ggplot2`に適したlong形式のデータに整形できます。
 
 ``` r
 area_daily_rain_long <-
-  area_daily_rain %>%
+  area_daily_rain_array %>%
   unfold_array()
 
 print(area_daily_rain_long)
@@ -343,6 +377,7 @@ print(area_daily_rain_long)
 
 ``` r
 library(ggplot2)
+#> Warning: package 'ggplot2' was built under R version 4.5.2
 
 area_daily_rain_long %>%
   ggplot(aes(lon, lat, fill = APCP)) +
@@ -361,6 +396,10 @@ area_daily_rain_long %>%
 `coord_sf`で適当な描画を設定できます。
 
 ``` r
+library(jpndistrict)
+#> This package provide map data is based on the Digital Map 25000 (Map
+#> Image) published by Geospatial Information Authority of Japan (Approval
+#> No.603FY2017 information usage <https://www.gsi.go.jp>)
 area_daily_rain_long %>%
   plot2d_shape(
     alpha = .5,     # 気象データの透過率
@@ -398,69 +437,51 @@ area_daily_rain_long %>%
   )
 ```
 
-`output = "array"`として複数要素を取得した場合、返り値は要素ごとのリスト形式になっています。
-`unfold_array`関数は単一要素のときと同様に作用しますが、`plot2d_***`系の関数を使った場合には警告が表示され、`element_index`で指定した番号の要素に関するデータのみが図示されます。
+<!-- `output = "array"`として複数要素を取得した場合、返り値は要素ごとのリスト形式になっています。 -->
 
-``` r
-area_sado_temps <-
-  fetch_amgsds(
-    times = ymd(c("1990/07/15", "1990/07/16"), tz = "Japan"),
-    lats = c(37.8, 38.4), lons = c(138.2, 138.6),
-    elements = c("TMP_max", "TMP_min"),
-    mode = "area",
-    output = "array"
-  )
+<!-- `unfold_array`関数は単一要素のときと同様に作用しますが、`plot2d_***`系の関数を使った場合には警告が表示され、`element_index`で指定した番号の要素に関するデータのみが図示されます。 -->
 
-# 上のコードは以下のコードと等価です
-# list(
-#   fetch_amgsds(..., element = "TMP_max", ...),
-#   fetch_amgsds(..., element = "TMP_min", ...)
-#   )
+<!-- ```{r fetch_multiple_array} -->
 
-str(area_sado_temps)
-#> List of 2
-#>  $ : num [1:33, 1:73, 1:2] NA NA NA 25.4 25.3 25.4 25.5 NA NA NA ...
-#>   ..- attr(*, "axes")=List of 3
-#>   .. ..$ lon : num [1:33] 138 138 138 138 138 ...
-#>   .. ..$ lat : num [1:73] 37.8 37.8 37.8 37.8 37.8 ...
-#>   .. ..$ time: Date[1:2], format: "1990-07-15" "1990-07-16"
-#>   ..- attr(*, "variable")= chr "TMP_max"
-#>  $ : num [1:33, 1:73, 1:2] NA NA NA 22.6 22.5 22.5 22.5 NA NA NA ...
-#>   ..- attr(*, "axes")=List of 3
-#>   .. ..$ lon : num [1:33] 138 138 138 138 138 ...
-#>   .. ..$ lat : num [1:73] 37.8 37.8 37.8 37.8 37.8 ...
-#>   .. ..$ time: Date[1:2], format: "1990-07-15" "1990-07-16"
-#>   ..- attr(*, "variable")= chr "TMP_min"
+<!-- area_sado_temps <- -->
 
-unfold_array(area_sado_temps)
-#> # A tibble: 1,918 × 5
-#>    time         lat   lon TMP_max TMP_min
-#>    <date>     <dbl> <dbl>   <dbl>   <dbl>
-#>  1 1990-07-15  37.8  138.    25.4    22.6
-#>  2 1990-07-15  37.8  138.    25.3    22.5
-#>  3 1990-07-15  37.8  138.    25.4    22.5
-#>  4 1990-07-15  37.8  138.    25.5    22.5
-#>  5 1990-07-15  37.8  138.    25.3    22.5
-#>  6 1990-07-15  37.8  138.    25.2    22.3
-#>  7 1990-07-15  37.8  138.    25.2    22.3
-#>  8 1990-07-15  37.8  138.    25.2    22.2
-#>  9 1990-07-15  37.8  138.    25.4    22.3
-#> 10 1990-07-15  37.8  138.    25.5    22.4
-#> # ℹ 1,908 more rows
+<!--   fetch_amgsds( -->
 
-unfold_array(area_sado_temps) %>%
-  plot2d_shape(pref_code = 15, element_index = 2, time_index = 2)
-#> Warning:
-#> 複数の要素のデータが存在します。`element_index`で指定された2番目の要素のみが表示されています。
-#> Warning:
-#> 2個の日付・時刻のデータが存在します。`time_index`で指定された2番目のデータのみが表示されています。
-```
+<!--     times = ymd(c("1990/07/15", "1990/07/16"), tz = "Japan"), -->
 
-<img src="man/figures/README-fetch_multiple_array-1.png" width="100%" />
+<!--     lats = c(37.8, 38.4), lons = c(138.2, 138.6), -->
 
-最新のバージョンでは、数百 km
-スケールでの広域にまたがってのデータ取得の場合に`output = "array"`とするとエラーが発生します。
-必要に応じて`tibble`形式でのダウンロード後に[リンク](https://github.com/KeachMurakami/agrmesh/issues/3)先のように持ち変えを行ってください。
+<!--     elements = c("TMP_max", "TMP_min"), -->
+
+<!--     mode = "area", -->
+
+<!--     output = "array" -->
+
+<!--   ) -->
+
+<!-- # 上のコードは以下のコードと等価です -->
+
+<!-- # list( -->
+
+<!-- #   fetch_amgsds(..., element = "TMP_max", ...), -->
+
+<!-- #   fetch_amgsds(..., element = "TMP_min", ...) -->
+
+<!-- #   ) -->
+
+<!-- str(area_sado_temps) -->
+
+<!-- unfold_array(area_sado_temps) -->
+
+<!-- unfold_array(area_sado_temps) %>% -->
+
+<!--   plot2d_shape(pref_code = 15, element_index = 2, time_index = 2) -->
+
+<!-- ``` -->
+
+<!-- 最新のバージョンでは、数百 km スケールでの広域にまたがってのデータ取得の場合に`output = "array"`とするとエラーが発生します。 -->
+
+<!-- 必要に応じて`tibble`形式でのダウンロード後に[リンク](https://github.com/KeachMurakami/agrmesh/issues/3)先のように持ち変えを行ってください。 -->
 
 ## 3. オフラインでの利用
 
@@ -485,7 +506,7 @@ MB 程度です。
 args(load_amgsds)
 #> function (times = Sys.time(), lats, lons, elements, mode = "point", 
 #>     source = "daily", output = "tibble", model = "MIROC5", RCP = "RCP8.5", 
-#>     is_clim = FALSE, server = "amd.rd.naro.go.jp/opendap", .ver = "AMD", 
+#>     is_clim = FALSE, server = Sys.getenv("amgsds_server"), .ver = "AMD", 
 #>     .silent = TRUE, localdir, autodownload = FALSE) 
 #> NULL
 ```
@@ -596,37 +617,71 @@ jpndistrictパッケージが提供する行政区画データを利用した図
 - 2025-07-17 (ver. 0.0.1.0010)
   - パッケージ起動時のインターネットアクセスとID/PW認証でcurlを使うよう変更しました
     (エンドユーザに影響は出ません)。
+- 2026-02-21 (ver. 0.1.0)
+  - Oracle Identity Cloud Serviceの多要素認証に対応しました。
 
 <!-- ## 4. 実践的な使用例 -->
+
 <!-- いくつかの実践的なサンプルを示します。 -->
+
 <!-- #### 4.1 有効積算気温マップの作成 -->
+
 <!-- 作物の発育を考える場合、一定の閾値以上の気温の累積値が重要となります。 -->
+
 <!-- 以下の式で表される有効積算気温という考え方が利用されています。 -->
+
 <!-- $$ -->
+
 <!-- 有効積算気温 = \sum_i {\left( \max( \textrm{TMP}_\textrm{mea, i} - \textrm{TMP}_\textrm{base}, 0)\right) }, -->
+
 <!-- $$ -->
+
 <!-- ここで`TMPmea`は日平均気温のメッシュ値、`TMPbase`は基準温度と呼ばれる閾値です。 -->
+
 <!-- ```{r} -->
+
 <!-- growth_season_temperature <- -->
+
 <!--   fetch_amgsds(times = c("2023-04-01", "2023-10-30"), -->
+
 <!--                lats = c(43, 44), lons = c(142, 143), element = "TMP_mea", -->
+
 <!--                mode = "area", output = "array") -->
+
 <!-- ``` -->
+
 <!-- `apply`関数は`MARGIN`で指定した次元に対して`FUN`で指定した関数を適用する関数です。 -->
+
 <!-- 以下スクリプトで時間軸に対して0度以上の日平均気温の積算値を計算します。 -->
+
 <!-- ```{r} -->
+
 <!-- apply(growth_season_temperature, MARGIN = 1:2, FUN = function(x) sum(pmax(x, 0))) -->
+
 <!-- ``` -->
+
 <!-- #### 4.2 気象指標の計算 -->
+
 <!-- 一般に作物の光合成量は日射量に応じて増加しますが、気温が適温から外れると増加量は小さくなります。 -->
+
 <!-- いくつかの地域で日平均気温と日射量に基づいて光合成量を計算してみます。 -->
+
 <!-- 仮に日光合成量 P を以下の式で計算できるものとします。 -->
+
 <!-- $$ -->
+
 <!-- P = \max\left(0, \dfrac{\textrm{GSR}}{| \textrm{TMP}_\textrm{mea} - 25|}\right), -->
+
 <!-- $$ -->
+
 <!-- ここでGSRは日積算日射量のメッシュ値、TMPmeaは日平均気温のメッシュ値です。 -->
+
 <!-- ```{r} -->
+
 <!-- groth_season_temperature <- -->
+
 <!--   fetch_amgsds(times = c("2023-04-01", "2023-10-30"), -->
+
 <!--                lats = c(), lons = c(), element = "TMP_mea") -->
+
 <!-- ``` -->
