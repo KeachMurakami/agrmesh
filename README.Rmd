@@ -38,7 +38,6 @@ Rstudioでの利用を想定しています。
 
 ```{r setup, eval = FALSE}
 install.packages("devtools")
- 
 install.packages("sf") # shapeデータの利用のため
 install.packages('https://cran.r-project.org/src/contrib/Archive/tidync/tidync_0.3.0.tar.gz', repos=NULL, type='source') # NetCDFデータの利用のため
 devtools::install_github("uribo/jpndistrict") # 国内の行政区画データの利用のため
@@ -53,11 +52,23 @@ devtools::install_github("KeachMurakami/agrmesh")
 ### 検証ユーザ
 
 2026年2月末以降に新規利用登録・継続利用登録を行ったユーザは、システムの利用に[Oracle Identity Cloud Service (IDCS) を利用した多要素認証](https://amu.rd.naro.go.jp/wiki_open/doku.php?id=faq)が必要です。
-上記ページの「新認証システム利用マニュアル」のRに関するページを参照してください。
+以下のコマンドで認証と接続確認を実施してください。
+詳しくは上記ページの「新認証システム利用マニュアル」のRに関するページを参照してください。
 
-次回の継続利用申請までは、暫定的に旧認証方式が利用可能です。
-起動時に`switch_system("classic")`を実行してください。
+```{r verify_new}
+library(agrmesh)
+amgsds_config()
+```
+
+なお、旧認証システム時代に登録を行い、有効なID/PWがあるユーザは暫定的に旧認証方式が利用可能です。
+以下のようにパッケージ読み込み後に`switch_system("classic")`を実行してください。
 以降の利用方法はこれまでと変わりません。
+
+```{r verify_old, eval = FALSE}
+library(agrmesh)
+switch_system("classic")
+amgsds_config()
+```
 
 ### 一般ユーザ
 
@@ -77,9 +88,9 @@ amgsds_pw=YOURPW
 ```
 
 この設定を正しく終えると、以降は自動的にユーザ認証がされます。
-Rstudioを再起動し、以下のようなメッセージが表示されることを確認してください。
+Rstudioを再起動し、以下のスクリプトを実行してから各種データへアクセスしてください。
 
-```{r verify}
+```{r verify, eval = FALSE}
 library(agrmesh)
 switch_system("classic", server = "https://amd.rd.naro.go.jp/opendap/") # serverはデータ提供会社指定のもの
 amgsds_config()

@@ -41,11 +41,37 @@ devtools::install_github("KeachMurakami/agrmesh")
 2026年2月末以降に新規利用登録・継続利用登録を行ったユーザは、システムの利用に[Oracle
 Identity Cloud Service (IDCS)
 を利用した多要素認証](https://amu.rd.naro.go.jp/wiki_open/doku.php?id=faq)が必要です。
-上記ページの「新認証システム利用マニュアル」のRに関するページを参照してください。
+以下のコマンドで認証と接続確認を実施してください。
+詳しくは上記ページの「新認証システム利用マニュアル」のRに関するページを参照してください。
 
-次回の継続利用申請までは、暫定的に旧認証方式が利用可能です。
-起動時に`switch_system("classic")`を実行してください。
+``` r
+library(agrmesh)
+#> Loading required package: tidync
+#> 
+#> ── WELCOME to R-AMGSDS interface (ver.0.1.0) ───────────────────────────────────
+#> ℹ Please consider to cite the dataset and this pacakge in your publications, see citation('agrmesh')
+#> 農研機構は、農業分野や他の分野における研究・開発・教育・試用を目的とする者に、審査に基づきメッシュ農業気象データ（以下、「このデータ」と呼ぶ。）の利用を許可します。
+#> 特に許可されない限り、このデータを他に転載したり第三者に提供したりすることはできません。
+#> このデータを利用して作成した情報を販売することはできません。
+#> 利用者は、利用期間の終了後、速やかに利用報告をすることとします。
+#> 農研機構は、利用者がこのデータの利用によって生じた結果、ならびに、このデータが利用できないことによって生じた結果について、いかなる責任も負いません。
+#> このデータを利用して得た成果等を公表する場合は、「農研機構メッシュ農業気象データ（The
+#> Agro-Meteorological Grid Square Data,
+#> NARO）」とRパッケージ「agrmesh」を利用した旨を明記してください。
+#> ✔ Switched to oracle mode.
+amgsds_config()
+#> ✔ Passed authentification
+```
+
+なお、旧認証システム時代に登録を行い、有効なID/PWがあるユーザは暫定的に旧認証方式が利用可能です。
+以下のようにパッケージ読み込み後に`switch_system("classic")`を実行してください。
 以降の利用方法はこれまでと変わりません。
+
+``` r
+library(agrmesh)
+switch_system("classic")
+amgsds_config()
+```
 
 ### 一般ユーザ
 
@@ -63,28 +89,12 @@ Identity Cloud Service (IDCS)
     amgsds_pw=YOURPW
 
 この設定を正しく終えると、以降は自動的にユーザ認証がされます。
-Rstudioを再起動し、以下のようなメッセージが表示されることを確認してください。
+Rstudioを再起動し、以下のスクリプトを実行してから各種データへアクセスしてください。
 
 ``` r
 library(agrmesh)
-#> Loading required package: tidync
-#> 
-#> ── WELCOME to R-AMGSDS interface (ver.0.1.0) ───────────────────────────────────
-#> ℹ Please consider to cite the dataset and this pacakge in your publications, see citation('agrmesh')
-#> 農研機構は、農業分野や他の分野における研究・開発・教育・試用を目的とする者に、審査に基づきメッシュ農業気象データ（以下、「このデータ」と呼ぶ。）の利用を許可します。
-#> 特に許可されない限り、このデータを他に転載したり第三者に提供したりすることはできません。
-#> このデータを利用して作成した情報を販売することはできません。
-#> 利用者は、利用期間の終了後、速やかに利用報告をすることとします。
-#> 農研機構は、利用者がこのデータの利用によって生じた結果、ならびに、このデータが利用できないことによって生じた結果について、いかなる責任も負いません。
-#> このデータを利用して得た成果等を公表する場合は、「農研機構メッシュ農業気象データ（The
-#> Agro-Meteorological Grid Square Data,
-#> NARO）」とRパッケージ「agrmesh」を利用した旨を明記してください。
-#> ✔ Switched to oracle mode.
 switch_system("classic", server = "https://amd.rd.naro.go.jp/opendap/") # serverはデータ提供会社指定のもの
-#> ✔ Switched to classic mode.
-#> Data provider: https://amd.rd.naro.go.jp/opendap/
 amgsds_config()
-#> ✔ USERID and PASSWORD -> verified
 ```
 
 ## 2. オンラインでの利用
@@ -106,8 +116,8 @@ print(point_daily_temp)
 #> # A tibble: 2 × 5
 #>   time         lat   lon site_id TMP_mea
 #>   <date>     <dbl> <dbl> <chr>     <dbl>
-#> 1 2026-02-25  43.0  141. 1          -3.5
-#> 2 2026-02-25  26.2  128. 2          20.2
+#> 1 2026-04-13  43.0  141. 1           8.2
+#> 2 2026-04-13  26.2  128. 2          25.1
 ```
 
 出力された`point_daily_temp`は、日付 (`time`)、緯度・経度
