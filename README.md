@@ -23,7 +23,6 @@ siliconのMacで動作確認されています。
 
 ``` r
 install.packages("devtools")
- 
 install.packages("sf") # shapeデータの利用のため
 install.packages('https://cran.r-project.org/src/contrib/Archive/tidync/tidync_0.3.0.tar.gz', repos=NULL, type='source') # NetCDFデータの利用のため
 devtools::install_github("uribo/jpndistrict") # 国内の行政区画データの利用のため
@@ -116,8 +115,8 @@ print(point_daily_temp)
 #> # A tibble: 2 × 5
 #>   time         lat   lon site_id TMP_mea
 #>   <date>     <dbl> <dbl> <chr>     <dbl>
-#> 1 2026-04-13  43.0  141. 1           8.2
-#> 2 2026-04-13  26.2  128. 2          25.1
+#> 1 2026-06-17  43.0  141. 1            18
+#> 2 2026-06-17  26.2  128. 2            26
 ```
 
 出力された`point_daily_temp`は、日付 (`time`)、緯度・経度
@@ -573,13 +572,14 @@ download_netcdf(amgsds_path = paths$complete, outdir = "~/amd_working", .silent 
 
 この例では、
 
-- `~/amd_working/AMD/2021/AMDy2021p6643eTMP_mea.nc.nc`
-- `~/amd_working/AMD/2021/AMDy2021p6644eTMP_mea.nc.nc`
+- `~/amd_working/AMD/2021/AMDy2021p6643eTMP_mea.nc.dap4.nc`
+- `~/amd_working/AMD/2021/AMDy2021p6644eTMP_mea.nc.dap4.nc`
 - …
-- `~/amd_working/AMD/2021/AMDy2021p6744eTMP_mea.nc.nc`
+- `~/amd_working/AMD/2021/AMDy2021p6744eTMP_mea.nc.dap4.nc`
 
 のような構造でファイルがダウンロードされます。
 １次メッシュ内に陸地が含まれない場合にはNetCDFファイルは存在せず、ダウンロード処理も実施されません。
+以降は`load_amgsds()`関数でローカル保存されたデータを読み込むことができます。
 
 どうしても容量を削減したい場合には、`amgsds_path = paths$point`あるいは`amgsds_path = paths$area`とすることで、１次メッシュ全体ではなく指定した地点・範囲のデータのみをダウンロードできます。
 この場合、ご自分でNetCDFファイルを読み込むRあるいはその他言語のプログラムを作成してください。

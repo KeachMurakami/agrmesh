@@ -194,7 +194,7 @@ download_netcdf <-
     if(stringr::str_detect(amgsds_path[1], "AMSy....p")){
       valid_meshes <- stringr::str_c(paste0("p", nonempty_meshes_fewer), collapse = "|")
     } else {
-      valid_meshes <- stringr::str_c(paste0("p", nonempty_meshes), collapse = "|")
+      valid_meshes <- stringr::str_c(paste0("p", nonempty_meshes_fewer), collapse = "|")
     }
     available_path <- stringr::str_subset(amgsds_path, valid_meshes)
 
