@@ -191,11 +191,11 @@ replace_stop_words <-
 download_netcdf <-
   function(amgsds_path, outdir, server = Sys.getenv("amgsds_server"), .silent = TRUE){
 
-    if(stringr::str_detect(amgsds_path[1], "AMSy....p")){
+    # if(stringr::str_detect(amgsds_path[1], "AMSy....p")){
       valid_meshes <- stringr::str_c(paste0("p", nonempty_meshes_fewer), collapse = "|")
-    } else {
-      valid_meshes <- stringr::str_c(paste0("p", nonempty_meshes_fewer), collapse = "|")
-    }
+    # } else {
+    #   valid_meshes <- stringr::str_c(paste0("p", nonempty_meshes), collapse = "|")
+    # }
     available_path <- stringr::str_subset(amgsds_path, valid_meshes)
 
     from <- paste0(server, available_path)
@@ -303,11 +303,11 @@ read_netcdf <-
 
     } else if(output == "array"){
 
-      if(stringr::str_detect(amgsds_path[1], "AMSy....p")){
+      # if(stringr::str_detect(amgsds_path[1], "AMSy....p")){
         valid_meshes <- stringr::str_c(paste0("p", nonempty_meshes_fewer), collapse = "|")
-      } else {
-        valid_meshes <- stringr::str_c(paste0("p", nonempty_meshes), collapse = "|")
-      }
+      # } else {
+      #   valid_meshes <- stringr::str_c(paste0("p", nonempty_meshes), collapse = "|")
+      # }
 
       is_available <- stringr::str_extract(basename(amgsds_path), "p[:digit:]{4}") %in% paste0("p", valid_meshes)
 
@@ -580,11 +580,12 @@ load_amgsds <-
         generate_path(times, lats, lons, elements, source = source,
                       model = model, RCP = RCP, is_clim = is_clim, .ver = .ver)
 
-      if(stringr::str_detect(amgsds_path[1], "AMSy....p")){
+      # from Sys5, valid cells are reduced
+      # if(stringr::str_detect(amgsds_path[1], "AMSy....p")){
         valid_meshes <- paste0("p", nonempty_meshes_fewer)
-      } else {
-        valid_meshes <- paste0("p", nonempty_meshes)
-      }
+      # } else {
+      #   valid_meshes <- paste0("p", nonempty_meshes)
+      # }
 
       # check if all mesh data available
       not_exist <- !file.exists(paste0(localdir, amgsds_path[["complete"]]))
