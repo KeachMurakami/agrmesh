@@ -52,23 +52,28 @@ devtools::install_github("KeachMurakami/agrmesh")
 ### 検証ユーザ
 
 2026年2月末以降に新規利用登録・継続利用登録を行ったユーザは、システムの利用に[Oracle Identity Cloud Service (IDCS) を利用した多要素認証](https://amu.rd.naro.go.jp/wiki_open/doku.php?id=faq)が必要です。
-以下のコマンドで認証と接続確認を実施してください。
-詳しくは上記ページの「新認証システム利用マニュアル」のRに関するページを参照してください。
+以下のコマンドを実行し、認証状態を確認します。
+認証が有効であれば、以下のように表示されます。
 
 ```{r verify_new}
 library(agrmesh)
 amgsds_config()
 ```
 
-なお、旧認証システム時代に登録を行い、有効なID/PWがあるユーザは暫定的に旧認証方式が利用可能です。
-以下のようにパッケージ読み込み後に`switch_system("classic")`を実行してください。
-以降の利用方法はこれまでと変わりません。
+未認証であれば、以下のような画像が表示されるので、URLとDevice codeを使って二段階認証を行ってください。
+二段階認証のプロセスは上記ページの他ツールと同様です。
 
-```{r verify_old, eval = FALSE}
-library(agrmesh)
-switch_system("classic")
-amgsds_config()
-```
+![](man/figures/amgsds_config.png)
+
+<!-- なお、旧認証システム時代に登録を行い、有効なID/PWがあるユーザは暫定的に旧認証方式が利用可能です。 -->
+<!-- 以下のようにパッケージ読み込み後に`switch_system("classic")`を実行してください。 -->
+<!-- 以降の利用方法はこれまでと変わりません。 -->
+
+<!-- ```{r verify_old, eval = FALSE} -->
+<!-- library(agrmesh) -->
+<!-- switch_system("classic") -->
+<!-- amgsds_config() -->
+<!-- ``` -->
 
 ### 一般ユーザ
 

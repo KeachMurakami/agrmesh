@@ -40,14 +40,14 @@ devtools::install_github("KeachMurakami/agrmesh")
 2026年2月末以降に新規利用登録・継続利用登録を行ったユーザは、システムの利用に[Oracle
 Identity Cloud Service (IDCS)
 を利用した多要素認証](https://amu.rd.naro.go.jp/wiki_open/doku.php?id=faq)が必要です。
-以下のコマンドで認証と接続確認を実施してください。
-詳しくは上記ページの「新認証システム利用マニュアル」のRに関するページを参照してください。
+以下のコマンドを実行し、認証状態を確認します。
+認証が有効であれば、以下のように表示されます。
 
 ``` r
 library(agrmesh)
 #> Loading required package: tidync
 #> 
-#> ── WELCOME to R-AMGSDS interface (ver.0.1.0) ───────────────────────────────────
+#> ── WELCOME to R-AMGSDS interface (ver.0.1.1001) ────────────────────────────────
 #> ℹ Please consider to cite the dataset and this pacakge in your publications, see citation('agrmesh')
 #> 農研機構は、農業分野や他の分野における研究・開発・教育・試用を目的とする者に、審査に基づきメッシュ農業気象データ（以下、「このデータ」と呼ぶ。）の利用を許可します。
 #> 特に許可されない限り、このデータを他に転載したり第三者に提供したりすることはできません。
@@ -62,15 +62,27 @@ amgsds_config()
 #> ✔ Passed authentification
 ```
 
-なお、旧認証システム時代に登録を行い、有効なID/PWがあるユーザは暫定的に旧認証方式が利用可能です。
-以下のようにパッケージ読み込み後に`switch_system("classic")`を実行してください。
-以降の利用方法はこれまでと変わりません。
+未認証であれば、以下のような画像が表示されるので、URLとDevice
+codeを使って二段階認証を行ってください。
+二段階認証のプロセスは上記ページの他ツールと同様です。
 
-``` r
-library(agrmesh)
-switch_system("classic")
-amgsds_config()
-```
+![](man/figures/amgsds_config.png)
+
+<!-- なお、旧認証システム時代に登録を行い、有効なID/PWがあるユーザは暫定的に旧認証方式が利用可能です。 -->
+
+<!-- 以下のようにパッケージ読み込み後に`switch_system("classic")`を実行してください。 -->
+
+<!-- 以降の利用方法はこれまでと変わりません。 -->
+
+<!-- ```{r verify_old, eval = FALSE} -->
+
+<!-- library(agrmesh) -->
+
+<!-- switch_system("classic") -->
+
+<!-- amgsds_config() -->
+
+<!-- ``` -->
 
 ### 一般ユーザ
 
@@ -115,8 +127,8 @@ print(point_daily_temp)
 #> # A tibble: 2 × 5
 #>   time         lat   lon site_id TMP_mea
 #>   <date>     <dbl> <dbl> <chr>     <dbl>
-#> 1 2026-06-17  43.0  141. 1            18
-#> 2 2026-06-17  26.2  128. 2            26
+#> 1 2026-07-31  43.0  141. 1          19.9
+#> 2 2026-07-31  26.2  128. 2          29.6
 ```
 
 出力された`point_daily_temp`は、日付 (`time`)、緯度・経度
@@ -532,8 +544,6 @@ area_photoperiod <-
     localdir = "~/amd_working/",  # 保存先フォルダ
     autodownload = TRUE           # 自動ダウンロードを許可
   )
-#> Warning in stri_detect_regex(string, pattern, negate = negate, opts_regex =
-#> opts(pattern)): argument is not an atomic vector; coercing
 #> ℹ SSDのNetCDFファイルをOPeNDAPサーバからダウンロードします。
 
 
